@@ -2,117 +2,84 @@
 comments: true
 ---
 
-# Plugins Deep Dive
+# Plugin Deep Dive
 
-How does Endstone load your plugins?
+How does Endstone load and run your plugins?
 
-Firstly, `server.cpp` makes the plugin manager. Then, the "plugins" directory is scanned.
+## Registration
 
-```cpp
-auto plugin_dir = fs::current_path() / "plugins";
-```
+At a high level, the Endstone server first creates the plugin manager. The manager then registers the C++ and Python plugin loaders.
 
 ```mermaid
 flowchart TD
-	A[server.cpp] -->|Creates plugin manager| B[Plugin Manager]
-	B -->|Initialises loader| C[Python Plugin Loader]
-	B -->|Initialises loader| D[C++ Plugin Loader]
-
+	A[Server] -->|Creates plugin manager| B[Plugin Manager]
+	subgraph Plugin System
+	B ~~~ C[Python Plugin Loader] --Register loader--> B
+	B ~~~ D[C++ Plugin Loader] --Register loader--> B
+	end
 ```
 
-The plugin manager (`EndstonePluginManager`) creates loaders
-
-> [!note] Resolver
-> 
-
-```cpp
-Plugin *EndstonePluginManager::loadPlugin(std::string file)
-{
-    auto *loader = resolvePluginLoader(file);
-    if (!loader) {
-        return nullptr;
-    }
-    auto *plugin = loader->loadPlugin(file);
-    if (!plugin) {
-        return nullptr;
-    }
-    initPlugin(*plugin, *loader, fs::path(file).parent_path());  // dependency injection
-    if (!loadPlugin(*plugin)) {
-        return nullptr;
-    }
-    return plugin;
-}
-```
-
-Plugin loaders define what file they accept
+Each plugin loader defines what files they parse, and how to parse them. This information is passed during registration.
 
 ```mermaid
-flowchart TD
-	A[Plugins directory] -->|plugin| B[Plugin loader]
+flowchart BT
+	subgraph g1 [C++ Plugin Loader]
+	A[Parser]
+	B[File Filter]
+	end	
+	subgraph g2 [Python Plugin Loader]
+	C[Parser]
+	D[File Filter]
+	end
+	
+	E[Plugin Manager]
+	g1 --Register responsibility for C++ plugins--> E
+	g2 --Register responsibility for Python plugins--> E	
+	
 ```
 
-```cpp
-void EndstoneServer::loadPlugins()
-{
-    plugin_manager_->registerLoader(std::make_unique<CppPluginLoader>(*this));
-    plugin_manager_->registerLoader(std::make_unique<PythonPluginLoader>(*this));
+## Loading
 
-    auto plugin_dir = fs::current_path() / "plugins";
+The server now looks for a `plugins` directory to load plugins from.
 
-    if (exists(plugin_dir)) {
-        plugin_manager_->loadPlugins(plugin_dir.string());
-    }
-    else {
-        create_directories(plugin_dir);
-    }
-}
+```mermaid
+flowchart LR
+	A[Server executable file]
+	subgraph plugins
+	B["Plugin A (C++)"]
+	C["Plugin B (Python)"]
+	end
+	
+	A --Checks if directory exists--> plugins
+	
 ```
 
+When the server finds plugins in that directory, it calls the manager to load them.
 
+```mermaid
+flowchart LR
+	A[Server executable file]
+	subgraph g1 [plugins]
+	B["Plugin A (C++)"]
+	C["Plugin B (Python)"]
+	end
+	
+	B --Plugin path--> A
+	C --Plugin path--> A
 
-```cpp
-std::vector<Plugin *> EndstonePluginManager::loadPlugins(std::vector<std::string> files)
-{
-    std::vector<Plugin *> plugins;
-    for (const auto &file : files) {
-        auto *loader = resolvePluginLoader(file);
-        if (!loader) {
-            continue;
-        }
-        auto *plugin = loader->loadPlugin(file);
-        if (!plugin) {
-            continue;
-        }
-        initPlugin(*plugin, *loader, fs::path(file).parent_path());  // dependency injection
-        plugins.push_back(plugin);
-    }
-    return loadPlugins(plugins);
-}
+	subgraph g2 [Plugin System]
+	PPL[Python Plugin Loader]
+	CPL[C++ Plugin Loader]
+	MNG[Plugin Manager]
+	end
+	
+	A --Load plugin A--> MNG
+	A --Load plugin B--> MNG
+	MNG --Load Plugin B (Python)-->PPL
+	MNG --Load Plugin A (C++)-->CPL
+	
 ```
 
+!!! note 
 
-```cpp
-namespace endstone {
-
-/**
- * @brief Called when an Actor is spawned into a world.
- *
- * If an Actor Spawn event is cancelled, the actor will not spawn.
- */
-class ActorSpawnEvent : public Cancellable<ActorEvent<Actor>> {
-public:
-    explicit ActorSpawnEvent(Actor &actor) : Cancellable(actor) {}
-    ~ActorSpawnEvent() override = default;
-
-    inline static const std::string NAME = "ActorSpawnEvent";
-    [[nodiscard]] std::string getEventName() const override { return NAME; }
-
-    // TODO(event): add spawn cause
-};
-
-}  // namespace endstone
-```
-
-**EVENTS ARE IMPORTANT!!!**
-
-`callEvent(e)`
+    This is not what's exactly done in the source code. The logic for scanning a directory belongs to the plugin manager.
