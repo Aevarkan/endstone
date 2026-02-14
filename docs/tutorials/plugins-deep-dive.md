@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Plugin Deep Dive
+# Plugins Deep Dive
 
 How does Endstone load and run your plugins?
 
