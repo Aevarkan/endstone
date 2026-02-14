@@ -6,7 +6,7 @@ comments: true
 
 How does Endstone load and run your plugins?
 
-## Registration
+## Plugin Registration
 
 At a high level, the Endstone server first creates the plugin manager. The manager then registers the C++ and Python plugin loaders.
 
@@ -38,7 +38,7 @@ flowchart BT
 	
 ```
 
-## Loading
+## Plugin Loading
 
 The server now looks for a `plugins` directory to load plugins from.
 
