@@ -86,35 +86,30 @@ flowchart LR
 
 ## Runtime
 
-Once the server is running, in-game events are passed to the loaded plugins for handling and possible cancellation.
+Once the server is running, in-game events are passed to the loaded plugins for handling and optional cancellation, if the event is cancellable.
 
 ```mermaid
-flowchart TD
-	subgraph g1 [Game Runtime]
-	A[Player joins]
-	B[Player places block]
-	end
+sequenceDiagram
+	participant GR as Game Runtime
+	participant PM as Plugin Manager
+	participant PL as Plugin
 	
-	C[Server]
+	PL->>PM: Register event listeners
 	
-	subgraph g2 [Loaded Plugins]
-	D[Area protection plugin]
-	E[Banlist plugin]
-	end
 	
-	A --Calls PlayerJoinEvent--> C
-	B --Calls BlockPlaceEvent--> C
-
-	C --PlayerJoinEvent--> E
-	C --BlockPlaceEvent--> D
+	GR->> GR: Running
 	
-	E --Handle PlayerJoinEvent event--> E
-	D --Handle BlockPlaceEvent event--> D
 	
-	E --PlayerJoinEvent Cancellation--> C
-	D --BlockPlaceEvent Cancellation--> C
+	GR->>PM: callEvent(Event)
+	activate GR
 	
-	C --PlayerJoinEvent Cancellation--> A
-	C --BlockPlaceEvent Cancellation--> B
+	PM->>PL: Provide event to registered listeners
 	
+	PL->>PL: Handle event
+	
+	PL-->>PM: Optionally return cancellation information
+	
+	PM-->>GR: Process cancellable event
+	
+	deactivate GR
 ```
