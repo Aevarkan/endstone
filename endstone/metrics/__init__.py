@@ -87,9 +87,11 @@ class Metrics(MetricsBase):
         Args:
             platform_data (Dict[str, Any]): The dict to append data to.
         """
-        platform_data["playerAmount"] = len(self._plugin.server.online_players)
-        platform_data["onlineMode"] = self._plugin.server.online_mode
-        platform_data["minecraftVersion"] = self._plugin.server.minecraft_version
+        server = self._plugin.server
+        platform_data["playerAmount"] = len(server.online_players)
+        platform_data["onlineMode"] = server.online_mode
+        platform_data["bukkitVersion"] = f"{server.version} (MC: {server.minecraft_version})"
+        platform_data["bukkitName"] = server.name
 
         os_name = platform.system()
         if os_name == "Windows":
