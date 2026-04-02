@@ -11,7 +11,7 @@ FROM base AS builder
 # Install required dependencies and configure LLVM
 ARG LLVM_VERSION=20
 RUN apt-get update -y -qq \
-    && apt-get install -y -qq build-essential lsb-release git wget software-properties-common gnupg \
+    && apt-get install -y -qq build-essential lsb-release git wget software-properties-common gnupg autoconf automake libtool m4 \
     && wget https://apt.llvm.org/llvm.sh \
     && chmod +x llvm.sh \
     && ./llvm.sh ${LLVM_VERSION} \
