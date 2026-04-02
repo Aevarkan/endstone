@@ -20,6 +20,7 @@
 
 #include "bedrock/world/item/enchanting/enchant.h"
 #include "bedrock/world/item/item.h"
+#include "endstone/core/enchantments/enchantment.h"
 #include "endstone/core/nbt.h"
 #include "endstone/inventory/item_type.h"
 #include "endstone/inventory/meta/item_meta.h"
@@ -109,15 +110,13 @@ public:
         if (!hasEnchants()) {
             return false;
         }
-        return enchantments_.contains(id);
+        return enchantments_.contains(std::string(id));
     }
 
     [[nodiscard]] int getEnchantLevel(EnchantmentId id) const override
     {
-        if (!hasEnchant(id)) {
-            return 0;
-        }
-        return enchantments_.at(id);
+        auto it = enchantments_.find(std::string(id));
+        return it != enchantments_.end() ? it->second : 0;
     }
 
     [[nodiscard]] std::unordered_map<const Enchantment *, int> getEnchants() const override
@@ -125,7 +124,7 @@ public:
         if (hasEnchants()) {
             std::unordered_map<const Enchantment *, int> enchants;
             for (const auto &[id, lvl] : enchantments_) {
-                enchants.emplace(Enchantment::get(id), lvl);
+                enchants.emplace(Enchantment::get(EnchantmentId(id)), lvl);
             }
             return enchants;
         }
@@ -140,13 +139,13 @@ public:
         }
         if (force || level >= ench->getStartLevel() && level <= ench->getMaxLevel()) {
             const auto old = getEnchantLevel(id);
-            enchantments_[id] = level;
+            enchantments_[std::string(id)] = level;
             return old == 0 || old != level;
         }
         return false;
     }
 
-    bool removeEnchant(EnchantmentId id) override { return enchantments_.erase(id) > 0; }
+    bool removeEnchant(EnchantmentId id) override { return enchantments_.erase(std::string(id)) > 0; }
 
     void removeEnchants() override { enchantments_.clear(); }
 
@@ -157,7 +156,7 @@ public:
             return false;
         }
         for (const auto &key : enchantments_ | std::views::keys) {
-            const auto *enchant = Enchantment::get(key);
+            const auto *enchant = Enchantment::get(EnchantmentId(key));
             if (enchant->conflictsWith(*ench)) {
                 return true;
             }
@@ -254,21 +253,21 @@ private:
         display->put(std::move(key), std::move(value));
     }
 
-    static std::unordered_map<EnchantmentId, int> buildEnchantments(const ::ListTag &tag)
+    static std::unordered_map<std::string, int> buildEnchantments(const ::ListTag &tag)
     {
-        std::unordered_map<EnchantmentId, int> enchantments;
+        std::unordered_map<std::string, int> enchantments;
         tag.forEachCompoundTag([&](const ::CompoundTag &enchant_tag) {
-            auto id = enchant_tag.getShort("id");
+            auto type = enchant_tag.getShort("id");
             auto lvl = enchant_tag.getShort("lvl") & 0xffff;
-            const auto *enchant = Enchant::getEnchant(static_cast<Enchant::Type>(id));
-            if (enchant) {
-                enchantments[enchant->getStringId().getString()] = lvl;
+            if (const auto *ench = Enchantment::get(
+                    EnchantmentId::minecraft(Enchant::getEnchant(static_cast<Enchant::Type>(type))->getStringId().getString()))) {
+                enchantments[std::string(ench->getId())] = lvl;
             }
         });
         return enchantments;
     }
 
-    static void applyEnchantments(const std::unordered_map<EnchantmentId, int> &enchantments, ::CompoundTag &tag)
+    static void applyEnchantments(const std::unordered_map<std::string, int> &enchantments, ::CompoundTag &tag)
     {
         tag.remove(ItemStackBase::TAG_ENCHANTS);
         if (enchantments.empty()) {
@@ -277,12 +276,13 @@ private:
 
         auto list = std::make_unique<::ListTag>();
         for (const auto &[id, lvl] : enchantments) {
-            auto subtag = std::make_unique<::CompoundTag>();
-            const auto *enchant = Enchant::getEnchantFromName(std::string(EnchantmentId(id).getKey()));
-            if (!enchant) {
+            const auto *ench = Enchantment::get(EnchantmentId(id));
+            if (!ench) {
                 continue;
             }
-            subtag->putShort("id", static_cast<std::int16_t>(enchant->getEnchantType()));
+            const auto &handle = static_cast<const EndstoneEnchantment &>(*ench).getHandle();
+            auto subtag = std::make_unique<::CompoundTag>();
+            subtag->putShort("id", static_cast<std::int16_t>(handle.getEnchantType()));
             subtag->putShort("lvl", static_cast<std::int16_t>(lvl));
             list->add(std::move(subtag));
         }
@@ -291,7 +291,7 @@ private:
 
     std::string display_name_;
     std::vector<std::string> lore_;
-    std::unordered_map<EnchantmentId, int> enchantments_;
+    std::unordered_map<std::string, int> enchantments_;
     int repair_cost_ = 0;
     int damage_ = 0;
     bool unbreakable_ = false;

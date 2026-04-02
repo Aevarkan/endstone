@@ -49,12 +49,12 @@ def test_server_version(server: Server) -> None:
 
 
 def test_minecraft_version(server: Server) -> None:
-    """Verify minecraft_version follows expected format (e.g., '1.21.50')."""
+    """Verify minecraft_version follows expected format (e.g., '1.21.50' or '26.11')."""
     version = server.minecraft_version
     assert isinstance(version, str)
     assert len(version) > 0
-    # Should match pattern like X.Y.Z or X.Y.Z.W
-    assert re.match(r"^\d+\.\d+\.\d+(\.\d+)?$", version)
+    # Should match pattern like X.Y, X.Y.Z, or X.Y.Z.W
+    assert re.match(r"^\d+\.\d+(\.\d+){0,2}$", version)
 
 
 def test_protocol_version(server: Server) -> None:
@@ -259,10 +259,11 @@ def test_start_time(server: Server) -> None:
     start = server.start_time
     assert isinstance(start, datetime)
     # Start time should be in the past
-    now = datetime.now(timezone.utc)
-    # Handle both timezone-aware and naive datetimes
+    # Use naive local time for comparison since start_time may be naive local time
     if start.tzinfo is None:
-        start = start.replace(tzinfo=timezone.utc)
+        now = datetime.now()
+    else:
+        now = datetime.now(timezone.utc)
     assert start <= now
 
 

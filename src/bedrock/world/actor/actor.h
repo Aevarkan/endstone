@@ -45,6 +45,7 @@
 #include "bedrock/world/actor/actor_definition_identifier.h"
 #include "bedrock/world/actor/actor_definition_ptr.h"
 #include "bedrock/world/actor/actor_flags.h"
+#include "bedrock/world/actor/actor_hurt_result.h"
 #include "bedrock/world/actor/actor_initialization_method.h"
 #include "bedrock/world/actor/actor_runtime_id.h"
 #include "bedrock/world/actor/actor_swing_source.h"
@@ -177,7 +178,7 @@ public:
     // virtual bool canAttack(Actor *, bool) const = 0;
     virtual void setTarget(Actor *) = 0;
     virtual bool isValidTarget(Actor *) const = 0;
-    virtual bool attack(Actor &, ActorDamageCause const &) = 0;
+    virtual ActorHurtResult attack(Actor &, ActorDamageCause const &) = 0;
     virtual void performRangedAttack(Actor &, float) = 0;
     virtual void setOwner(ActorUniqueID) = 0;
     virtual void setSitting(bool) = 0;
@@ -190,7 +191,7 @@ public:
     [[nodiscard]] virtual LevelSoundEvent getAmbientSound() const = 0;
     [[nodiscard]] virtual bool isInvulnerableTo(ActorDamageSource const &) const = 0;
     [[nodiscard]] virtual ActorDamageCause getBlockDamageCause(Block const &) const = 0;
-    virtual bool doFireHurt(int) = 0;
+    virtual ActorHurtResult doFireHurt(int) = 0;
     virtual void onLightningHit() = 0;
     virtual void feed(int) = 0;
     virtual void handleEntityEvent(ActorEvent, int) = 0;
@@ -261,7 +262,7 @@ public:
 protected:
     [[nodiscard]] virtual bool _shouldProvideFeedbackOnHandContainerItemSet(HandSlot, ItemStack const &) const = 0;
     [[nodiscard]] virtual bool _shouldProvideFeedbackOnArmorSet(ArmorSlot, ItemStack const &) const = 0;
-    virtual bool _hurt(ActorDamageSource const &, float, bool, bool) = 0;
+    virtual ActorHurtResult _hurt(ActorDamageSource const &, float, bool, bool) = 0;
 
 public:
     virtual void readAdditionalSaveData(CompoundTag const &, DataLoadHelper &) = 0;

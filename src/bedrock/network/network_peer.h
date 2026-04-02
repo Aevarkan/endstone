@@ -78,5 +78,8 @@ public:
     [[nodiscard]] virtual bool isEncrypted() const = 0;
 
 protected:
-    virtual DataStatus _receivePacket(std::string &, const PacketRecvTimepointPtr &) = 0;
+    virtual DataStatus _receivePacket(std::string &out_data, const PacketRecvTimepointPtr &timepoint_ptr) = 0;
+    std::shared_ptr<NetworkPeer> peer_;
+
+    friend class BatchedNetworkPeer;  // Endstone
 };

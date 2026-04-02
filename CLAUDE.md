@@ -103,3 +103,15 @@ C++ plugins link against `endstone::endstone` (header-only) and use the `endston
 ### Dependencies
 
 Core dependencies managed via Conan: fmt, boost, pybind11, spdlog, nlohmann_json, entt, magic_enum, sentry-native. See `conanfile.py` for full list.
+
+## Git Conventions
+
+- Never add a `Co-Authored-By` line for Claude when creating commits.
+- CHANGELOG.md must strictly follow [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/):
+  - Write for humans (server admins and plugin developers), not machines.
+  - Every version gets an entry; latest version comes first.
+  - Group changes by type: Added, Changed, Deprecated, Removed, Fixed, Security.
+  - Versions and sections must be linkable (reference-style links at bottom).
+  - Display the release date of each version.
+  - Include user-visible changes and API changes; omit internal implementation details (no refactoring notes, no internal class/struct changes).
+  - Prefix breaking changes with `**BREAKING**:` in the Changed or Removed section.

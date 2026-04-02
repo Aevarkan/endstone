@@ -15,11 +15,13 @@
 #include "bedrock/world/level/block/states/vanilla_block_states.h"
 
 namespace VanillaStateIds {
-static const HashedString Age = "age";
-static const HashedString Direction = "direction";
-static const HashedString ExplodeBit = "explode_bit";
-static const HashedString Extinguished = "extinguished";
-static const HashedString FacingDirection = "facing_direction";
-static const HashedString HeadPieceBit = "head_piece_bit";
-static const HashedString PortalAxis = "portal_axis";
+const HashedString Age = "age";
+const HashedString Direction = "direction";
+const HashedString ExplodeBit = "explode_bit";
+const HashedString Extinguished = "extinguished";
+const HashedString FacingDirection = "facing_direction";
+const HashedString HeadPieceBit = "head_piece_bit";
+const HashedString PersistentBit = "persistent_bit";
+const HashedString PortalAxis = "portal_axis";
+const HashedString UpdateBit = "update_bit";
 }  // namespace VanillaStateIds

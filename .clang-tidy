@@ -22,6 +22,7 @@ Checks: >
   -readability-isolate-declaration,
   -readability-function-cognitive-complexity,
   -readability-magic-numbers,
+  -readability-math-missing-parentheses,
   -readability-named-parameter
   -readability-simplify-boolean-expr
 

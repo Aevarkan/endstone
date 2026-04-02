@@ -148,9 +148,9 @@ def test_enchants_dict(server: Server):
     assert not meta.has_enchants
     assert meta.enchants == {}
 
-    meta.add_enchant(Enchantment.SHARPNESS, 5, True)
-    meta.add_enchant(Enchantment.KNOCKBACK, 2, True)
-    item.set_item_meta(meta)
+    assert meta.add_enchant(Enchantment.SHARPNESS, 5, True)
+    assert meta.add_enchant(Enchantment.KNOCKBACK, 2, True)
+    assert item.set_item_meta(meta)
 
     result_meta = item.item_meta
     enchants = result_meta.enchants

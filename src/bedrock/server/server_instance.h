@@ -61,8 +61,8 @@ private:
     friend class endstone::core::EndstoneServer;
     const bool is_dedicated_server_;
     std::unique_ptr<Minecraft> minecraft_;
-    std::unique_ptr<ProfilingManager> profiling_manager;
-    ServiceRegistrationToken<ProfilingManager> profiling_manager_service_registration_token_;
+    // std::unique_ptr<ProfilingManager> profiling_manager;
+    // ServiceRegistrationToken<ProfilingManager> profiling_manager_service_registration_token_;
     std::unique_ptr<ServerNetworkSystem> network_;
     std::unique_ptr<LoopbackPacketSender> packet_sender_;
     std::unique_ptr<Timer> sim_timer_;
@@ -100,7 +100,7 @@ private:
     bool critical_disk_error_telemetry_sent_;
     std::unique_ptr<Editor::IEditorManager> editor_manager_;
     Bedrock::NonOwnerPointer<CDNConfig> cdn_config_;
-    Bedrock::NonOwnerPointer<ServerTextSettings> server_text_settings_;  // +952
+    Bedrock::NonOwnerPointer<ServerTextSettings> server_text_settings_;
     Bedrock::NotNullNonOwnerPtr<cereal::ReflectionCtx> cereal_context_;
     std::unique_ptr<LinkedAssetValidator> linked_asset_validator_;
 };

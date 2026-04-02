@@ -1,0 +1,29 @@
+name: 'Set up Clang/LLVM'
+description: 'Install Clang, libc++, and LLVM tools on Linux'
+
+inputs:
+  llvm-version:
+    description: 'LLVM major version to install'
+    required: false
+    default: '20'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Install Clang ${{ inputs.llvm-version }}
+      shell: bash
+      env:
+        LLVM_VERSION: ${{ inputs.llvm-version }}
+      run: |
+        sudo apt-get update -y -q
+        sudo apt-get install -y -q build-essential lsb-release wget software-properties-common gnupg
+        sudo wget https://apt.llvm.org/llvm.sh
+        sudo chmod +x llvm.sh
+        sudo ./llvm.sh ${LLVM_VERSION}
+        sudo apt-get install -y -q libc++-${LLVM_VERSION}-dev libc++abi-${LLVM_VERSION}-dev clang-tools-${LLVM_VERSION}
+        sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-${LLVM_VERSION} 200
+        sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-${LLVM_VERSION} 200
+        sudo update-alternatives --install /usr/bin/llvm-cov llvm-cov /usr/bin/llvm-cov-${LLVM_VERSION} 100
+        sudo update-alternatives --install /usr/bin/ld ld /usr/bin/ld.lld-${LLVM_VERSION} 100
+        echo "CC=clang" >> $GITHUB_ENV
+        echo "CXX=clang++" >> $GITHUB_ENV

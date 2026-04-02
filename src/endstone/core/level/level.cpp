@@ -38,7 +38,7 @@ EndstoneLevel::EndstoneLevel(::Level &level) : server_(EndstoneServer::getInstan
         dimensions_[dimension.getDimensionId().runtime_id] =
             std::make_unique<EndstoneDimension>(dimension.getWeakRef(), *this);
     };
-    level.getDimensionManager().forEachDimension([&](::Dimension &dimension) {
+    level.forEachDimension([&](::Dimension &dimension) {
         add_dimension(dimension);
         return true;
     });

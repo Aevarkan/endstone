@@ -116,9 +116,10 @@ private:
     std::unique_ptr<DimensionBrightnessRamp> dimension_brightness_ramp_;
     std::shared_ptr<LevelChunkMetaData> target_metadata_;
     std::unique_ptr<RuntimeLightingManager> runtime_lighting_manager_;
-    std::string name_;  // +360
-    DimensionType id_;  // +392
-    bool ultra_warm_;   // +396
+    std::string name_;
+    DimensionType id_;
+    const DimensionIdType registry_id_;
+    bool ultra_warm_;  // +390
     bool has_ceiling_;
     bool has_skylight_;
     Brightness sky_darken_;

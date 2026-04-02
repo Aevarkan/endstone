@@ -33,6 +33,7 @@
 #include "endstone/color_format.h"
 #include "endstone/command/plugin_command.h"
 #include "endstone/core/block/block_data.h"
+#include "endstone/core/block/block_type.h"
 #include "endstone/core/boss/boss_bar.h"
 #include "endstone/core/command/command_map.h"
 #include "endstone/core/command/console_command_sender.h"
@@ -187,6 +188,7 @@ void EndstoneServer::setLevel(::Level &level)
 
 void EndstoneServer::initRegistries()
 {
+    registries_["BlockType"] = EndstoneRegistry<BlockType, ::BlockType>::create();
     registries_["Enchantment"] = EndstoneRegistry<Enchantment, ::Enchant>::create();
     registries_["ItemType"] = EndstoneRegistry<ItemType, ::Item>::create();
     BlockStateRegistry::get().unregisterBlockStates();

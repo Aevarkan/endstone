@@ -230,6 +230,11 @@ public:
      */
     static constexpr auto Breach = EnchantmentId::minecraft("breach");
 
+    /**
+     * @brief Applied to spears, causes jab attacks to propel the wielder forward horizontally.
+     */
+    static constexpr auto Lunge = EnchantmentId::minecraft("lunge");
+
     virtual ~Enchantment() = default;
 
     /**

@@ -37,7 +37,7 @@ using BlockChangeContextSource =
 
 class BlockChangeContext {
 public:
-    BlockChangeContext();
+    BlockChangeContext() = default;
     BlockChangeContext(const bool);
     BlockChangeContext(const BlockPos &pos) : context_source_(pos) {}
     BlockChangeContext(Actor *actor) : context_source_(actor) {}

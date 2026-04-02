@@ -13,16 +13,15 @@
 // limitations under the License.
 
 #pragma once
+
 #include "bedrock/world/level/block/block_type.h"
+#include "bedrock/world/level/block/block_event.h"
+
 class LeavesBlock : public BlockType {
 public:
+    static constexpr int REQUIRED_WOOD_RANGE = 4;
+    ENDSTONE_HOOK void randomTick(BlockEvents::BlockRandomTickEvent &event_data) const;
+
 protected:
-    // #blameMojang - Instead of profiling and optimizing actual hot paths, Mojang just cranks
-    // compiler optimization flags and prays. On Linux, this mangles the calling convention.
-    // Same function, different ABI per platform. We declare it static on Linux to match reality.
-#ifdef _WIN32
-    ENDSTONE_HOOK void _die(BlockSource &region, BlockPos const &pos) const;
-#else
-    ENDSTONE_HOOK static void _die(BlockSource &region, BlockPos const &pos);
-#endif
+    void _die(BlockSource &region, const BlockPos &pos) const;
 };

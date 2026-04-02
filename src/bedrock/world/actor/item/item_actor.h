@@ -35,7 +35,7 @@ public:
     bool isFireImmune() const override;
 
 protected:
-    bool _hurt(const ActorDamageSource &, float, bool, bool) override;
+    ActorHurtResult _hurt(const ActorDamageSource &, float, bool, bool) override;
     virtual void addAdditionalSaveData(CompoundTag &) const;
     void readAdditionalSaveData(const CompoundTag &, DataLoadHelper &) override;
 

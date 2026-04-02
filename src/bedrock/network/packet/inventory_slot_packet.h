@@ -25,20 +25,9 @@
 
 class InventorySlotPacket : public Packet {
 public:
-    InventorySlotPacket();
-    InventorySlotPacket(ContainerID id, std::uint32_t slot, const ItemStack &item);
-    InventorySlotPacket(ContainerID id, std::uint32_t slot, const ItemStack &item,
-                        const FullContainerName &full_container_name, const ItemStack &storage_item);
-    [[nodiscard]] MinecraftPacketIds getId() const override;
-    [[nodiscard]] std::string_view getName() const override;
-    void write(BinaryStream &stream) const override;
-
     ContainerID inventory_id;
     FullContainerName full_container_name;
     NetworkItemStackDescriptor storage_item;
     uint32_t slot;
     NetworkItemStackDescriptor item;
-
-private:
-    Bedrock::Result<void> _read(ReadOnlyBinaryStream &) override;
 };

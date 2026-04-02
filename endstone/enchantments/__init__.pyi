@@ -49,6 +49,7 @@ class Enchantment:
     WIND_BURST = "minecraft:wind_burst"
     DENSITY = "minecraft:density"
     BREACH = "minecraft:breach"
+    LUNGE = "minecraft:lunge"
     @property
     def id(self) -> str:
         """

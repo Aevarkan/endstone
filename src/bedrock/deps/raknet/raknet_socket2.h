@@ -75,8 +75,6 @@ struct RNS2_BerkleyBindParameters {  // NOLINT
 
 class RNS2_Windows_Linux_360 {  // NOLINT
 protected:
-    // TODO(fixme): write a RakNetPlugin to intercept ID_UNCONNECTED_PING and trigger ServerListPingEvent
-    //  then craft and send ID_UNCONNECTED_PONG based on the event.
     // NOLINTNEXTLINE
     static RNS2SendResult Send_Windows_Linux_360NoVDP(RNS2Socket socket, RNS2_SendParameters *send_parameters,
                                                       const char *file, unsigned int line);

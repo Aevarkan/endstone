@@ -17,8 +17,11 @@
 #include "bedrock/world/item/enchanting/enchant.h"
 #include "bedrock/world/item/item.h"
 #include "bedrock/world/item/registry/item_registry_manager.h"
+#include "bedrock/world/level/block/registry/block_type_registry.h"
+#include "endstone/core/block/block_type.h"
 #include "endstone/core/enchantments/enchantment.h"
 #include "endstone/core/inventory/item_type.h"
+#include "endstone/core/server.h"
 
 namespace endstone::core {
 
@@ -67,6 +70,40 @@ std::unique_ptr<Registry<ItemType>> EndstoneRegistry<ItemType, ::Item>::create()
 {
     return std::make_unique<EndstoneRegistry>(
         [](auto _, const auto &handle) { return std::make_unique<EndstoneItemType>(handle); });
+}
+
+template <>
+std::vector<Identifier<BlockType>> EndstoneRegistry<BlockType, ::BlockType>::identifiers() const
+{
+    std::vector<Identifier<BlockType>> keys;
+    keys.reserve(cache_.size());
+    for (const auto &[key, _] : cache_) {
+        keys.emplace_back(key);
+    }
+    return keys;
+}
+
+template <>
+const ::BlockType *EndstoneRegistry<BlockType, ::BlockType>::getMinecraft(Identifier<BlockType> id) const
+{
+    throw std::logic_error(fmt::format("EndstoneRegistry<BlockType>: cache is pre-populated, getMinecraft should not "
+                                       "be called (id: {})",
+                                       id));
+}
+
+template <>
+std::unique_ptr<Registry<BlockType>> EndstoneRegistry<BlockType, ::BlockType>::create()
+{
+    auto registry = std::make_unique<EndstoneRegistry>(
+        [](auto _, const auto &handle) { return std::make_unique<EndstoneBlockType>(handle); });
+    const auto &server = EndstoneServer::getInstance();
+    const auto &level = server.getEndstoneLevel()->getHandle();
+    level.getBlockTypeRegistry()->forEachBlockType([&](const ::BlockType &block_type) {
+        std::string id = block_type.getName().getString();
+        registry->cache_.emplace(id, std::make_unique<EndstoneBlockType>(block_type));
+        return true;
+    });
+    return registry;
 }
 
 }  // namespace endstone::core

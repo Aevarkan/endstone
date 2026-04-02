@@ -68,6 +68,7 @@ void init_enchantments(py::module_ &m)
         .def_property_readonly_static("WIND_BURST", [](const py::object &) { return Enchantment::WindBurst; })
         .def_property_readonly_static("DENSITY", [](const py::object &) { return Enchantment::Density; })
         .def_property_readonly_static("BREACH", [](const py::object &) { return Enchantment::Breach; })
+        .def_property_readonly_static("LUNGE", [](const py::object &) { return Enchantment::Lunge; })
 
         .def_property_readonly("id", &Enchantment::getId, "Return the identifier for this enchantment.")
         .def_property_readonly("translation_key", &Enchantment::getTranslationKey,

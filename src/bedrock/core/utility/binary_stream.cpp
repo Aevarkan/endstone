@@ -283,6 +283,20 @@ void BinaryStream::branchingWrite_DEPRECATED(std::function<void(BinaryStream &, 
     branch_writer(*this, control_value);
 }
 
+bool BinaryStream::writeTypeBegin_DocHelper(const char *, const char *, const char *)
+{
+    return true;
+}
+
+void BinaryStream::writeTypeEnd_DocHelper() {}
+
+void BinaryStream::writeEnum_DocHelper(const char *, const char *) {}
+
+void BinaryStream::writeUnsignedChar(unsigned char value, char const *doc_field_name, char const *doc_field_notes)
+{
+    write(&value, sizeof(value));
+}
+
 void BinaryStream::_writeArray(std::function<void(BinaryStream &)> &&size_writer,
                                std::function<void(BinaryStream &)> &&writer, char const *doc_field_name,
                                char const *doc_field_notes)

@@ -20,11 +20,5 @@
 
 class BlockTypeRegistry {
 public:
-    using BlockComplexAliasPostSplitBlockNames = std::vector<std::reference_wrapper<const HashedString>>;
-    static BlockTypeRegistry &get();
     void forEachBlockType(brstd::function_ref<bool(BlockType const &)> callback);
-    WeakPtr<BlockType> lookupByName(const HashedString &name, bool log_not_found) const;
-    const Block *lookupByName(const HashedString &name, int data, bool log_not_found) const;
-    bool isComplexAliasBlock(const HashedString &block_name) const;
-    const BlockComplexAliasPostSplitBlockNames &getComplexAliasPostSplitBlockNames(const HashedString &old_name) const;
 };

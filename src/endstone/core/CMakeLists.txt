@@ -40,6 +40,7 @@ add_library(endstone_core
         block/block_face.cpp
         block/block_state.cpp
         block/block_snapshot.cpp
+        block/block_type.cpp
         boss/boss_bar.cpp
         console/console.cpp
         command/block_command_sender.cpp

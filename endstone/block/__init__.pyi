@@ -7,7 +7,7 @@ import typing
 
 from endstone.level import Dimension, Location
 
-__all__ = ["Block", "BlockData", "BlockFace", "BlockState"]
+__all__ = ["Block", "BlockData", "BlockFace", "BlockState", "BlockType"]
 
 class Block:
     """
@@ -91,6 +91,42 @@ class BlockFace(enum.Enum):
     SOUTH = 3
     WEST = 4
     EAST = 5
+
+class BlockType:
+    """
+    Represents a block type.
+    """
+    @property
+    def id(self) -> str:
+        """
+        Return the identifier of this block type.
+        """
+        ...
+    @property
+    def translation_key(self) -> str:
+        """
+        Get the translation key, suitable for use in a translation component.
+        """
+        ...
+    @property
+    def has_item_type(self) -> bool:
+        """
+        Returns true if this BlockType has a corresponding ItemType.
+        """
+        ...
+    def create_block_data(*args, **kwargs) -> None:
+        """
+        Creates a new BlockData instance for this block type, with all properties initialized to defaults.
+        """
+        ...
+    @staticmethod
+    def get(name: str) -> BlockType:
+        """
+        Attempts to get the BlockType with the given name.
+        """
+        ...
+    def __str__(self) -> str: ...
+    def __repr__(self) -> str: ...
 
 class BlockData:
     """

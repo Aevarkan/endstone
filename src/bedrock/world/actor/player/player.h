@@ -34,6 +34,7 @@
 #include "bedrock/world/events/event_coordinator.h"
 #include "bedrock/world/events/player_event_coordinator.h"
 #include "bedrock/world/inventory/ender_chest_inventory.h"
+#include "bedrock/world/inventory/furnace_options.h"
 #include "bedrock/world/inventory/inventory_options.h"
 #include "bedrock/world/inventory/transaction/inventory_transaction_manager.h"
 #include "bedrock/world/item/item_group.h"
@@ -195,7 +196,7 @@ public:
     const float sneak_height;
     const float sneak_offset;
     int score;
-    BuildPlatform build_platform;  // +1180
+    BuildPlatform build_platform;
     std::string unique_name;
     std::string server_id;
     std::string self_signed_id;
@@ -219,12 +220,15 @@ protected:
     std::shared_ptr<ContainerManagerModel> container_manager_;
     Bedrock::PubSub::PublisherPtr<void(const ContainerManagerModel *), Bedrock::PubSub::ThreadModel::SingleThreaded>
         container_manager_subscribers_;
-    std::unique_ptr<PlayerInventory> inventory_;  // +1480
+    std::unique_ptr<PlayerInventory> inventory_;
     InventoryOptions inventory_options_;
+    FurnaceOptions furnace_options_;
+    FurnaceOptions blast_furnace_options_;
+    FurnaceOptions smoker_options_;
     float distance_since_transform_event_;
     std::vector<ItemInstance> creative_item_list_;
     // std::array<std::vector<ItemGroup>, 4> filtered_creative_item_list_;
-    std::string platform_online_id_;  // +1536
+    std::string platform_online_id_;
 
 public:
     enum class SpawnPositionState : int {
@@ -330,12 +334,12 @@ private:
     int map_index_;
     float elytra_volume_;
     LoopingSoundHandle elytra_loop_;
-    std::unordered_map<HashedString, int> cooldowns_;
-    std::unordered_map<HashedString, HashedString> vanilla_cooldowns_;
+    // std::unordered_map<HashedString, int> cooldowns_;
+    // std::unordered_map<HashedString, HashedString> vanilla_cooldowns_;
     std::int64_t started_blocking_time_stamp_;
     std::int64_t blocked_using_shield_time_stamp_;
     std::int64_t blocked_using_damaged_shield_time_stamp_;
-    std::string name_;  // +3096
+    std::string name_;
     std::string last_emote_played_;
     time_t emote_easter_egg_end_time_;
     unsigned int emote_message_count_;

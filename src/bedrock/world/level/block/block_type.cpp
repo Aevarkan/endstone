@@ -15,7 +15,10 @@
 #include "bedrock/world/level/block/block_type.h"
 
 #include "bedrock/symbol.h"
+#include "bedrock/world/actor/item/experience_orb.h"
+#include "bedrock/world/item/item_stack.h"
 #include "bedrock/world/item/registry/item_registry.h"
+#include "bedrock/world/level/level.h"
 
 bool BlockType::hasProperty(BlockProperty property) const
 {
@@ -63,6 +66,29 @@ bool BlockType::isSolid() const
 float BlockType::getThickness() const
 {
     return thickness_;
+}
+
+void BlockType::spawnResources(BlockSource &region, const BlockPos &pos, const Block &block, IRandom &randomize,
+                               const ResourceDropsContext &resource_drops_context) const
+{
+    // auto [items, experience_count] = getResourceDrops(block, randomize, resource_drops_context);
+    // for (const auto &item : items) {
+    //     popResource(region, pos, item);
+    // }
+    // ExperienceOrb::spawnOrbs(region, pos, experience_count, ExperienceOrb::DropType::FromBlock, nullptr);
+    // spawnAfterBreak(region, block, pos, resource_drops_context);
+    BEDROCK_CALL(&BlockType::spawnResources, this, region, pos, block, randomize, resource_drops_context);
+}
+
+ItemActor *BlockType::popResource(BlockSource &region, const BlockPos &pos, const ItemStack &item_stack)
+{
+    if (!region.canDoBlockDrops() || item_stack.getCount() == 0) {
+        return nullptr;
+    }
+    auto &random = region.getLevel().getThreadRandom();
+    const Vec3 spawn_pos{pos.x + random.nextFloat() * 0.7F + 0.15F, pos.y + random.nextFloat() * 0.7F + 0.15F,
+                         pos.z + random.nextFloat() * 0.7F + 0.15F};
+    return region.getLevel().getSpawner().spawnItem(region, item_stack, nullptr, spawn_pos, 10);
 }
 
 float BlockType::getTranslucency() const

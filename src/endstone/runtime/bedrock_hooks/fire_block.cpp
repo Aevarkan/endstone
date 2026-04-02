@@ -21,11 +21,11 @@
 #include "bedrock/world/level/level.h"
 #include "bedrock/world/level/weather.h"
 
-// void FireBlock::checkBurn(BlockSource &region, const BlockPos &pos, int chance, Randomize &randomize, int age) const
+// void FireBlock::checkBurn(BlockSource &region, const BlockPos &pos, int chance, IRandom &random, int age) const
 // {
 //     _tryEvictBeehive(region, pos);
 //     const auto &block = region.getBlock(pos);
-//     if (randomize.nextIntInclusive(0, chance - 1) >= block.getBurnOdds()) {
+//     if (random.nextIntInclusive(0, chance - 1) >= block.getBurnOdds()) {
 //         return;
 //     }
 //
@@ -38,8 +38,8 @@
 //         // the block is NOT a TNT
 //         // TODO(event): call BlockBurnEvent, return if cancelled
 //         const auto &weather = region.getDimension().getWeather();
-//         if (randomize.nextIntInclusive(0, age + 9) < 5 && !weather.isRainingAt(region, pos)) {
-//             const auto new_age = std::min(age + (randomize.nextIntInclusive(0, 4) / 4), 15);
+//         if (random.nextIntInclusive(0, age + 9) < 5 && !weather.isRainingAt(region, pos)) {
+//             const auto new_age = std::min(age + (random.nextIntInclusive(0, 4) / 4), 15);
 //             const auto block_state_with_age = getDefaultState().setState<int>(VanillaStateIds::Age, new_age);
 //             region.removeBlock(pos);
 //             if (isValidFireLocation(region, pos)) {

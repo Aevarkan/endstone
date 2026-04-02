@@ -15,6 +15,7 @@
 #include "bedrock/world/level/block/block.h"
 
 #include "bedrock/world/level/block_source.h"
+#include "bedrock/world/level/level.h"
 
 bool Block::hasProperty(BlockProperty property) const
 {
@@ -127,6 +128,14 @@ bool Block::getSecondPart(const BlockSource &region, const BlockPos &pos, BlockP
 void Block::destroy(BlockSource &region, const BlockPos &pos, Actor *entity_source) const
 {
     getBlockType().destroy(region, pos, *this, entity_source);
+}
+
+void Block::spawnResources(BlockSource &region, const BlockPos &pos, IRandom &random,
+                           const ResourceDropsContext &resource_drops_context) const
+{
+    if (!region.getLevel().isClientSide()) {
+        getBlockType().spawnResources(region, pos, *this, random, resource_drops_context);
+    }
 }
 
 const Material &Block::getMaterial() const

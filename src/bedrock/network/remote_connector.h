@@ -14,7 +14,9 @@
 
 #pragma once
 
+#include "bedrock/network/connection_definition.h"
 #include "bedrock/network/connector.h"
+#include "bedrock/network/network_enable_disable_listener.h"
 
 class RemoteConnector : public Connector,
                         public NetworkEnableDisableListener,

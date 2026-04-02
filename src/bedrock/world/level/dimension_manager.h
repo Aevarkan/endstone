@@ -28,28 +28,10 @@ public:
     Bedrock::PubSub::Connector<void(Dimension &)> &getOnNewDimensionCreatedConnector() override;
     void shutdown();
     WeakRef<Dimension> getRandomDimension(Random &random);
-    WeakRef<Dimension> getOrCreateDimension(DimensionType dimensionType);
-    WeakRef<Dimension> getDimension(DimensionType dimensionType) const;
+    WeakRef<Dimension> getOrCreateDimension(DimensionType dimension_type);
+    WeakRef<Dimension> getDimension(DimensionType dimension_type) const;
     bool hasDimensions() const;
     int getNumDimensions() const;
-    void forEachDimension(std::function<bool(Dimension &)> callback)
-    {
-        for (auto &dimension : dimensions_ | std::views::values) {
-            if (!callback(*dimension)) {
-                return;
-            }
-        }
-    }
-
-    void forEachDimension(std::function<bool(const Dimension &)> callback) const
-    {
-        for (const auto &dimension : dimensions_ | std::views::values) {
-            if (!callback(*dimension)) {
-                return;
-            }
-        }
-    }
-
-private:
-    std::unordered_map<AutomaticID<Dimension, int>, OwnerPtr<Dimension>> dimensions_;
+    void forEachDimension(std::function<bool(Dimension &)> callback);
+    void forEachDimension(std::function<bool(const Dimension &)> callback) const;
 };

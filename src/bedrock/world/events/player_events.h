@@ -195,6 +195,18 @@ struct PlayerFormCloseEvent {
     std::uint32_t form_id;
     PlayerFormCloseReason form_close_reason;
 };
+enum class DataDrivenScreenClosedReason : uint8_t {
+    ProgrammaticClose = 0,
+    ProgrammaticCloseAll = 1,
+    ClientCanceled = 2,
+    UserBusy = 3,
+    InvalidForm = 4,
+};
+struct PlayerDataDrivenScreenClosedEvent {
+    WeakRef<EntityContext> mPlayer;
+    uint32_t mFormId;
+    DataDrivenScreenClosedReason mCloseReason;
+};
 struct PlayerDisconnectEvent {
     WeakEntityRef player;
 };
@@ -246,13 +258,14 @@ struct PlayerGameplayEvent<void>
     : ConstEventVariant<
           PlayerSkinLoadedClientEvent, PlayerAddEvent, PlayerAddExpEvent, PlayerAddLevelEvent, PlayerArmorExchangeEvent,
           PlayerDestroyBlockEvent, PlayerUseNameTagEvent, PlayerDropItemEvent, PlayerEatFoodEvent, PlayerDamageEvent,
-          PlayerDisconnectEvent, PlayerFormCloseEvent, PlayerFormResponseEvent, PlayerInputModeChangeEvent,
-          PlayerInitialSpawnEvent, PlayerOpenContainerEvent, PlayerCloseContainerEvent, PlayerHasInvalidContainerEvent,
-          PlayerShootArrowEvent, PlayerSwingStartEvent, PlayerRespawnEvent, PlayerSleepStateChangeEvent,
-          PlayerStopLoadingEvent, PlayerUpdateInteractionEvent, PlayerSelectedItemChangedEvent,
-          PlayerDimensionChangeBeforeEvent, PlayerDimensionChangeAfterEvent, PlayerInteractWithEntityAfterEvent,
-          PlayerInteractWithBlockAfterEvent, PlayerEmoteEvent, PlayerScriptInputEvent, PlayerInventoryItemChangeEvent,
-          PlayerHotbarSelectedSlotChangeEvent, PlayerInputPermissionCategoryChangeEvent> {};
+          PlayerDisconnectEvent, PlayerFormCloseEvent, PlayerFormResponseEvent, PlayerDataDrivenScreenClosedEvent,
+          PlayerInputModeChangeEvent, PlayerInitialSpawnEvent, PlayerOpenContainerEvent, PlayerCloseContainerEvent,
+          PlayerHasInvalidContainerEvent, PlayerShootArrowEvent, PlayerSwingStartEvent, PlayerRespawnEvent,
+          PlayerSleepStateChangeEvent, PlayerStopLoadingEvent, PlayerUpdateInteractionEvent,
+          PlayerSelectedItemChangedEvent, PlayerDimensionChangeBeforeEvent, PlayerDimensionChangeAfterEvent,
+          PlayerInteractWithEntityAfterEvent, PlayerInteractWithBlockAfterEvent, PlayerEmoteEvent,
+          PlayerScriptInputEvent, PlayerInventoryItemChangeEvent, PlayerHotbarSelectedSlotChangeEvent,
+          PlayerInputPermissionCategoryChangeEvent> {};
 static_assert(sizeof(PlayerGameplayEvent<void>) == 384);
 
 template <>

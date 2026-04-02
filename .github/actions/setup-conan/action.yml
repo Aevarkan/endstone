@@ -1,0 +1,53 @@
+name: 'Set up Conan'
+description: 'Set up Conan package manager with caching and optional dependency install'
+
+inputs:
+  build-type:
+    description: 'CMake build type (Release, Debug, RelWithDebInfo)'
+    required: false
+    default: 'Release'
+  python-version:
+    description: 'Python version to set up'
+    required: false
+    default: '3.12'
+  install-dependencies:
+    description: 'Run conan install after setup (set false for cibuildwheel workflows)'
+    required: false
+    default: 'true'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v6
+      with:
+        python-version: ${{ inputs.python-version }}
+        cache: 'pip'
+
+    - name: Cache Conan packages
+      uses: actions/cache@v5
+      with:
+        path: ~/.conan2/p
+        key: ${{ runner.os }}-conan-${{ inputs.build-type }}-${{ hashFiles('conanfile.py') }}
+        restore-keys: |
+          ${{ runner.os }}-conan-${{ inputs.build-type }}-
+
+    - name: Install Conan
+      shell: bash
+      run: |
+        python -m pip install --upgrade pip
+        pip install conan
+
+    - name: Detect Conan profile
+      shell: bash
+      run: conan profile detect --force
+
+    - name: Install dependencies with Conan
+      if: inputs.install-dependencies == 'true'
+      shell: bash
+      run: |
+        CONAN_ARGS="--build=missing -s compiler.cppstd=20 -s build_type=${{ inputs.build-type }} -c tools.cmake.cmaketoolchain:generator=Ninja"
+        if [ "$RUNNER_OS" = "Linux" ]; then
+          CONAN_ARGS="$CONAN_ARGS -s compiler.libcxx=libc++"
+        fi
+        conan install . $CONAN_ARGS

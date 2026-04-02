@@ -25,7 +25,7 @@
 namespace py = pybind11;
 
 namespace endstone::python {
-using RegistryTypes = type_list<Enchantment, ItemType>;
+using RegistryTypes = type_list<BlockType, Enchantment, ItemType>;
 
 template <typename List>
 struct registry_getter;

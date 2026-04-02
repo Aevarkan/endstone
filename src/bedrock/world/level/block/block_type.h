@@ -32,7 +32,7 @@
 #include "bedrock/world/item/item_category.h"
 #include "bedrock/world/level/block/actor/block_actor_type.h"
 #include "bedrock/world/level/block/components/block_component_storage.h"
-#include "bedrock/world/level/block/flammable.h"
+#include "bedrock/world/level/block/resource_drops_context.h"
 #include "bedrock/world/level/block/states/block_state.h"
 #include "bedrock/world/level/block/tint_method.h"
 #include "bedrock/world/level/block_pos.h"
@@ -48,6 +48,7 @@ class BlockSource;
 class Container;
 class IBlockSource;
 class IConstBlockSource;
+class ItemActor;
 class ItemStack;
 class ItemInstance;
 class Player;
@@ -181,7 +182,7 @@ public:
     [[nodiscard]] virtual bool isMultifaceBlock() const = 0;
     [[nodiscard]] virtual bool isSignalSource() const = 0;
     [[nodiscard]] virtual bool isConsumerComponent() const = 0;
-    [[nodiscard]] virtual bool canBeOriginalSurface() const = 0;
+    [[nodiscard]] virtual bool canBeOriginalSurface(bool) const = 0;
     [[nodiscard]] virtual bool isSilentWhenJumpingOff() const = 0;
     [[nodiscard]] virtual bool isValidAuxValue(int) const = 0;
     [[nodiscard]] virtual bool canFillAtPos(BlockSource &, BlockPos const &, Block const &) const = 0;
@@ -239,7 +240,8 @@ public:
                                               BlockType const &) const = 0;
     [[nodiscard]] virtual bool canBeBuiltOver(const Block &, BlockSource &, BlockPos const &) const = 0;
     virtual void triggerEvent(BlockSource &, BlockPos const &, int b0, int b1) const = 0;
-    // virtual void executeEvent(BlockSource &, BlockPos const &, Block const &, std::string const &, Actor &) const = 0;
+    // virtual void executeEvent(BlockSource &, BlockPos const &, Block const &, std::string const &, Actor &) const =
+    // 0;
     [[nodiscard]] virtual bool hasTag(BlockSource &, BlockPos const &, Block const &, std::string const &) const = 0;
     [[nodiscard]] virtual MobSpawnerData const *getMobToSpawn(SpawnConditions const &, BlockSource &) const = 0;
     [[nodiscard]] virtual bool shouldStopFalling(Actor &) const = 0;
@@ -266,7 +268,6 @@ public:
     virtual void animateTickBedrockLegacy(BlockSource &, BlockPos const &, Random &) const = 0;
     virtual void animateTick(BlockSource &, BlockPos const &, Random &) const = 0;
     [[nodiscard]] virtual BlockType &init() = 0;
-    [[nodiscard]] virtual Brightness getLightEmission(Block const &) const = 0;
     [[nodiscard]] virtual Block const *tryLegacyUpgrade(DataID) const = 0;
     [[nodiscard]] virtual bool dealsContactDamage(Actor const &, Block const &, bool) const = 0;
     [[nodiscard]] virtual Block const *tryGetInfested(Block const &) const = 0;
@@ -287,6 +288,7 @@ public:
     [[nodiscard]] virtual int getExtraRenderLayers() const = 0;
     [[nodiscard]] virtual const HashedString &getCullingLayer() const = 0;
     [[nodiscard]] virtual Brightness getLight(Block const &) const = 0;
+    [[nodiscard]] virtual Brightness getLightEmission(Block const &) const = 0;
     [[nodiscard]] virtual Brightness getEmissiveBrightness(Block const &) const = 0;
     [[nodiscard]] virtual mce::Color getMapColor(BlockSource &, BlockPos const &, Block const &) const = 0;
     virtual void _onHitByActivatingAttack(BlockSource &, BlockPos const &, Actor *) const = 0;
@@ -329,6 +331,11 @@ public:
     [[nodiscard]] bool requiresCorrectToolForDrops() const;
     [[nodiscard]] bool isSolid() const;
     [[nodiscard]] float getThickness() const;
+    void spawnResources(BlockSource &region, const BlockPos &pos, const Block &block, IRandom &randomize,
+                        const ResourceDropsContext &resource_drops_context) const;
+    ResourceDrops getResourceDrops(const Block &block, IRandom &random,
+                                   const ResourceDropsContext &resource_drops_context) const;
+    static ItemActor *popResource(BlockSource &region, const BlockPos &pos, const ItemStack &item_stack);
     [[nodiscard]] float getTranslucency() const;
     [[nodiscard]] const std::vector<HashedString> &getTags() const;
     [[nodiscard]] const Material &getMaterial() const;
@@ -388,7 +395,7 @@ private:
 protected:
     Brightness light_block_;
     Brightness light_emission_;
-    Color map_color_; // +400
+    Color map_color_;  // +400
     float friction_;
     NoteBlockInstrument note_block_instrument_;
     TintMethod tint_method_;

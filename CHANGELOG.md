@@ -2,12 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
-and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/EndstoneMC/endstone/compare/v0.11.1...HEAD)
+## [Unreleased]
 
-<small>[Compare with 0.11.1](https://github.com/EndstoneMC/endstone/compare/v0.11.1...HEAD)</small>
+### Added
+
+- Added support for BDS version 1.26.12.
+- Added `BlockType` to the registry API.
+- Added `Lunge` enchantment type for spears.
+
+### Fixed
+
+- Fixed `PacketReceiveEvent` error messages to include the packet ID for easier debugging.
+- Fixed `TextPacket` and `InventorySlotPacket` serialization causing bad packet disconnections.
+- Fixed `Translatable` messages being sent as raw `Translate` type instead of JSON `TextObject` (#344).
+- Fixed several issues in the metrics module.
+
+## [0.11.2] - 2026-03-02
 
 ### Added
 
@@ -21,9 +34,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed a crash caused by vulnerabilities introduced in Mojang's RakNet modifications (MCPE-228407).
 - Fixed missing exports for `BlockFormEvent`, `BlockFromToEvent`, and `BlockGrowEvent` events.
 
-## [0.11.1](https://github.com/EndstoneMC/endstone/releases/tag/v0.11.1) - 2026-02-20
-
-<small>[Compare with 0.11.0](https://github.com/EndstoneMC/endstone/compare/v0.11.0...v0.11.1)</small>
+## [0.11.1] - 2026-02-20
 
 ### Added
 
@@ -31,8 +42,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added `ListTag.to_list()` and `CompoundTag.to_dict()` methods (Python) that recursively convert NBT tag trees to
   native Python data structures (`list` and `dict`).
 - Exported `attribute`, `effect`, `nbt`, and `potion` submodules from the top-level `endstone` Python package.
-- Added explicit standard library `#include` directives across all public C++ API headers for self-contained
-  compilation.
+- C++ API headers are now self-contained and no longer require additional standard library includes.
+
+### Changed
+
+- **BREAKING**: `ServerListPingEvent.remote_host` and `ServerListPingEvent.remote_port` properties have been replaced by
+  a single `ServerListPingEvent.address` property that returns a `SocketAddress`.
 
 ### Fixed
 
@@ -44,14 +59,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed several issues that caused the Map API to not work correctly in some occasions. Maps now behave consistently
   across different platforms.
 
-### Changed
-
-- **BREAKING**: `ServerListPingEvent.remote_host` and `ServerListPingEvent.remote_port` properties have been replaced by
-  a single `ServerListPingEvent.address` property that returns a `SocketAddress`.
-
-## [0.11.0](https://github.com/EndstoneMC/endstone/releases/tag/v0.11.0) - 2026-02-13
-
-<small>[Compare with 0.10.18](https://github.com/EndstoneMC/endstone/compare/v0.10.18...v0.11.0)</small>
+## [0.11.0] - 2026-02-13
 
 ### Added
 
@@ -115,77 +123,63 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Default config file renamed from `endstone.toml` to `endstone.default.toml`.
 - Enchantment APIs now use typed `EnchantmentId` constants instead of raw strings.
 - Dropped Python 3.9 support (end-of-life). Minimum version is now Python 3.10.
-- Crash stack traces now filter out noise (CRT/runtime frames) and show demangled symbol names.
+- Crash stack traces are now cleaner and easier to read.
 - Suppressed verbose BDS content logs and database auto-compaction messages to reduce log clutter.
 
 ### Fixed
 
 - Fixed log files not reopening properly after rotation, which could cause logs to be written to stale files.
 - Fixed Python interpreter not being found reliably in multi-Python environments.
-- Fixed a crash on server shutdown caused by C++ destructors running after the Python interpreter was already torn down.
+- Fixed a crash on server shutdown.
 - Fixed plugin loading failing in environments where `pip` is not available (such as `uv`), since `pip` is used at
   runtime to install plugins from file.
 
-## [0.10.18](https://github.com/EndstoneMC/endstone/releases/tag/v0.10.18) - 2025-12-11
-
-<small>[Compare with 0.10.17](https://github.com/EndstoneMC/endstone/compare/v0.10.17...v0.10.18)</small>
+## [0.10.18] - 2025-12-11
 
 ### Fixed
 
-- Patched a new vulnerability in BDS where a bad LoginPacket could crash the server (well done mojang, well done).
+- Patched a vulnerability where a malformed login packet could crash the server.
 
-## [0.10.17](https://github.com/EndstoneMC/endstone/releases/tag/v0.10.17) - 2025-12-11
-
-<small>[Compare with 0.10.16](https://github.com/EndstoneMC/endstone/compare/v0.10.16...v0.10.17)</small>
-
-### Fixed
-
-- Resolved several crashes.
+## [0.10.17] - 2025-12-11
 
 ### Changed
 
 - Verbose content logs are now suppressed.
 
-## [0.10.16](https://github.com/EndstoneMC/endstone/releases/tag/v0.10.16) - 2025-12-11
+### Fixed
 
-<small>[Compare with 0.10.15](https://github.com/EndstoneMC/endstone/compare/v0.10.15...v0.10.16)</small>
+- Resolved several crashes.
+
+## [0.10.16] - 2025-12-11
 
 ### Added
 
 - Added support for BDS version 1.21.130.4.
 
-## [0.10.15](https://github.com/EndstoneMC/endstone/releases/tag/v0.10.15) - 2025-11-21
-
-<small>[Compare with 0.10.14](https://github.com/EndstoneMC/endstone/compare/v0.10.14...v0.10.15)</small>
+## [0.10.15] - 2025-11-21
 
 ### Added
 
 - Added support for BDS version 1.21.124.2.
 
-## [0.10.14](https://github.com/EndstoneMC/endstone/releases/tag/v0.10.14) - 2025-11-18
-
-<small>[Compare with 0.10.13](https://github.com/EndstoneMC/endstone/compare/v0.10.13...v0.10.14)</small>
+## [0.10.14] - 2025-11-18
 
 ### Added
 
 - Enable packet rate limiting by default to prevent packet flooding.
-- Enable RakNet's connection frequency limiting.
+- Enabled connection frequency limiting to prevent abuse.
 
 ### Fixed
 
 - Patched a vulnerability that allows malicious clients to continue sending packets after the connection is closed.
 
-## [0.10.13](https://github.com/EndstoneMC/endstone/releases/tag/v0.10.13) - 2025-11-18
-
-<small>[Compare with 0.10.12](https://github.com/EndstoneMC/endstone/compare/v0.10.12...v0.10.13)</small>
+## [0.10.13] - 2025-11-18
 
 ### Fixed
 
 - Resolved a crash that could occur with certain worlds.
 
-## [0.10.12](https://github.com/EndstoneMC/endstone/releases/tag/v0.10.12) - 2025-11-18
-
-<small>[Compare with 0.10.11](https://github.com/EndstoneMC/endstone/compare/v0.10.11...v0.10.12)</small>
+## [0.10.12] - 2025-11-18
 
 ### Added
 
@@ -194,40 +188,34 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Resolved a memory leak caused by chunks not unloading properly.
-- Patched a vulnerability where a crafted LoginPacket with an excessively long certificate chain could crash the server.
-- Patched a vulnerability where a malformed InventoryTransactionPacket could freeze the server.
+- Patched a vulnerability where a malformed login packet could crash the server.
+- Patched a vulnerability where a malformed packet could freeze the server.
 - Fixed a crash related to custom dimensions (LeviStone).
 - IP bans are now checked before the server processes player login.
 
-## [0.10.11](https://github.com/EndstoneMC/endstone/releases/tag/v0.10.11) - 2025-11-06
-
-<small>[Compare with 0.10.10](https://github.com/EndstoneMC/endstone/compare/v0.10.10...v0.10.11)</small>
+## [0.10.11] - 2025-11-06
 
 ### Added
 
 - Added support for BDS version 1.21.121.1.
-
-### Fixed
-
-- Resolved a crash that could occur when updating the scoreboard of an entity.
-- `Player::setWalkSpeed` now correctly sets the player's walk speed.
 
 ### Changed
 
 - `PlayerChatEvent` is now triggered before Script API's `ChatSendBeforeEvent`.
 - Verbose database logs (e.g. `Running AutoCompaction...`) are now suppressed.
 
-## [0.10.10](https://github.com/EndstoneMC/endstone/releases/tag/v0.10.10) - 2025-11-01
+### Fixed
 
-<small>[Compare with 0.10.9](https://github.com/EndstoneMC/endstone/compare/v0.10.9...v0.10.10)</small>
+- Resolved a crash that could occur when updating the scoreboard of an entity.
+- `Player::setWalkSpeed` now correctly sets the player's walk speed.
+
+## [0.10.10] - 2025-11-01
 
 ### Fixed
 
 - `PlayerItemHeldEvent` is no longer triggered when the `from` slot is the same as the `to` slot.
 
-## [0.10.9](https://github.com/EndstoneMC/endstone/releases/tag/v0.10.9) - 2025-10-30
-
-<small>[Compare with 0.10.8](https://github.com/EndstoneMC/endstone/compare/v0.10.8...v0.10.9)</small>
+## [0.10.9] - 2025-10-30
 
 ### Fixed
 
@@ -237,17 +225,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed an issue in the `/status` command where permission checks were not performed.
 - Fixed a crash that could occur when the Minecraft service was unavailable.
 
-## [0.10.8](https://github.com/EndstoneMC/endstone/releases/tag/v0.10.8) - 2025-10-28
-
-<small>[Compare with 0.10.7](https://github.com/EndstoneMC/endstone/compare/v0.10.7...v0.10.8)</small>
+## [0.10.8] - 2025-10-28
 
 ### Added
 
 - Added support for BDS version 1.21.120.4.
 
-## [0.10.7](https://github.com/EndstoneMC/endstone/releases/tag/v0.10.7) - 2025-10-14
-
-<small>[Compare with 0.10.6](https://github.com/EndstoneMC/endstone/compare/v0.10.6...v0.10.7)</small>
+## [0.10.7] - 2025-10-14
 
 ### Added
 
@@ -258,17 +242,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Resolve a crash when joining a server using a grayscale skin with an alpha channel.
 - Resolve an issue where item stacks containing blocks could not be given to players.
 
-## [0.10.6](https://github.com/EndstoneMC/endstone/releases/tag/v0.10.6) - 2025-10-02
-
-<small>[Compare with 0.10.5](https://github.com/EndstoneMC/endstone/compare/v0.10.5...v0.10.6)</small>
+## [0.10.6] - 2025-10-02
 
 ### Added
 
 - Added support for BDS version 1.21.111.1.
 
-## [0.10.5](https://github.com/EndstoneMC/endstone/releases/tag/v0.10.5) - 2025-09-26
-
-<small>[Compare with 0.10.4](https://github.com/EndstoneMC/endstone/compare/v0.10.4...v0.10.5)</small>
+## [0.10.5] - 2025-09-26
 
 ### Added
 
@@ -276,6 +256,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added `Level::getSeed` to retrieve the seed of the current level.
 - Added the `/seed` command to display the current level's seed.
 - Added `PlayerChatEvent::getFormat` and `PlayerChatEvent::setFormat` to customize the message format.
+
+### Changed
+
+- If a command usage includes a parameter of type `message`, it must be the final parameter. No additional parameters
+  are allowed after it.
+- On Windows, if the automatic loopback exemption fails, a warning will be shown, but the server will no longer stop
+  running.
 
 ### Fixed
 
@@ -285,16 +272,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `ItemStack::setCount` now correctly updates the item count instead of clearing the entire stack.
 - `PlayerChatEvent::setMessage` now correctly displays the updated message to the client.
 
-### Changed
-
-- If a command usage includes a parameter of type `message`, it must be the final parameter. No additional parameters
-  are allowed after it.
-- On Windows, if the automatic loopback exemption fails, a warning will be shown, but the server will no longer stop
-  running.
-
-## [0.10.4](https://github.com/EndstoneMC/endstone/releases/tag/v0.10.4) - 2025-08-10
-
-<small>[Compare with 0.10.3](https://github.com/EndstoneMC/endstone/compare/v0.10.3...v0.10.4)</small>
+## [0.10.4] - 2025-08-10
 
 ### Fixed
 
@@ -302,17 +280,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Resolved a crash that could occur after payload updates in `PacketReceiveEvent`.
 - Resolved a crash when running `/reload` after updating native plugins.
 
-## [0.10.3](https://github.com/EndstoneMC/endstone/releases/tag/v0.10.3) - 2025-08-06
-
-<small>[Compare with 0.10.2](https://github.com/EndstoneMC/endstone/compare/v0.10.2...v0.10.3)</small>
+## [0.10.3] - 2025-08-06
 
 ### Added
 
 - Added support for BDS version 1.21.100.7
 
-## [0.10.2](https://github.com/EndstoneMC/endstone/releases/tag/v0.10.2) - 2025-08-05
-
-<small>[Compare with 0.10.1](https://github.com/EndstoneMC/endstone/compare/v0.10.1...v0.10.2)</small>
+## [0.10.2] - 2025-08-05
 
 ### Added
 
@@ -322,9 +296,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Fixed an issue where knockback is still applied when `ActorDamageEvent` is cancelled
 
-## [0.10.1](https://github.com/EndstoneMC/endstone/releases/tag/v0.10.1) - 2025-07-31
-
-<small>[Compare with 0.10.0](https://github.com/EndstoneMC/endstone/compare/v0.10.0...v0.10.1)</small>
+## [0.10.1] - 2025-07-31
 
 ### Fixed
 
@@ -332,9 +304,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Resolve an issue where an actor could be damaged again in their invulnerability window if the damage value from a
   prior `ActorDamageEvent` had been lowered.
 
-## [0.10.0](https://github.com/EndstoneMC/endstone/releases/tag/v0.10.0) - 2025-07-30
-
-<small>[Compare with 0.9](https://github.com/EndstoneMC/endstone/compare/v0.9...v0.10.0)</small>
+## [0.10.0] - 2025-07-30
 
 ### Added
 
@@ -362,9 +332,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `PlayerEmoteEvent` is now cancellable; cancelling prevents broadcasting to other players.
 - Player bans and IP bans are now checked before the server sends resource packs to clients.
 - `PlayerPickupItemEvent::getItem()` now returns an `Item` entity instead of an `ItemStack`.
-- **BREAKING CHANGE (Python API)**: `Button` class has been moved from the `ActionForm` class to the `endstone.form`
+- **BREAKING**: `Button` class has been moved from the `ActionForm` class to the `endstone.form`
   module.
-- **BREAKING CHANGE (Python API)**: `PlayerJoinEvent`, `PlayerQuitEvent` and `PlayerDeathEvent` now use `Translatable`
+- **BREAKING**: `PlayerJoinEvent`, `PlayerQuitEvent` and `PlayerDeathEvent` now use `Translatable`
   for messages by default.
 - Changed VENV_DIR to "$HOME/.virtualenvs/endstone" in `autoinstall.sh` and `start.sh` to avoid polluting users' home
   directory by @GyanPrakash2483 in [#226](https://github.com/EndstoneMC/endstone/pull/226)
@@ -380,25 +350,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed a bug where the selector argument got cut short when parsing commands.
 - Fixed `Server.name` property in Python API by @cenk in [#220](https://github.com/EndstoneMC/endstone/pull/220)
 
-## [0.9.4](https://github.com/EndstoneMC/endstone/releases/tag/v0.9.4) - 2025-07-14
-
-<small>[Compare with 0.9.3](https://github.com/EndstoneMC/endstone/compare/v0.9.3...v0.9.4)</small>
+## [0.9.4] - 2025-07-14
 
 ### Added
 
 - Added support for BDS version 1.21.94.2.
 
-## [0.9.3](https://github.com/EndstoneMC/endstone/releases/tag/v0.9.3) - 2025-07-04
-
-<small>[Compare with 0.9.2](https://github.com/EndstoneMC/endstone/compare/v0.9.2...v0.9.3)</small>
+## [0.9.3] - 2025-07-04
 
 ### Added
 
 - Added support for BDS version 1.21.93.1.
 
-## [0.9.2](https://github.com/EndstoneMC/endstone/releases/tag/v0.9.2) - 2025-06-30
-
-<small>[Compare with 0.9.1](https://github.com/EndstoneMC/endstone/compare/v0.9.1...v0.9.2)</small>
+## [0.9.2] - 2025-06-30
 
 ### Added
 
@@ -406,19 +370,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added `ChunkLoadEvent` and `ChunkUnloadEvent`, which are called during chunk loading and unloading.
 - Added `PlayerPickupItemEvent`, which is called when a player is about to pick up an item from the ground.
 
-### Fixed
-
-- `Chunk::getZ()` now returns the correct value.
-- Fixed a crash when accessing a registry entry multiple times.
-
 ### Changed
 
 - `ActorRemoveEvent` is no longer triggered if `ActorSpawnEvent` is cancelled.
 - `PlayerTeleportEvent` is no longer triggered if `PlayerMoveEvent` or `PlayerJumpEvent` is cancelled.
 
-## [0.9.1](https://github.com/EndstoneMC/endstone/releases/tag/v0.9.1) - 2025-06-19
+### Fixed
 
-<small>[Compare with 0.9.0](https://github.com/EndstoneMC/endstone/compare/v0.9.0...v0.9.1)</small>
+- `Chunk::getZ()` now returns the correct value.
+- Fixed a crash when accessing a registry entry multiple times.
+
+## [0.9.1] - 2025-06-19
 
 ### Added
 
@@ -428,9 +390,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - `ItemType::getTranslationKey` now returns the correct translation key.
 
-## [0.9.0](https://github.com/EndstoneMC/endstone/releases/tag/v0.9.0) - 2025-06-17
-
-<small>[Compare with 0.8.2](https://github.com/EndstoneMC/endstone/compare/v0.8.2...v0.9.0)</small>
+## [0.9.0] - 2025-06-17
 
 ### Added
 
@@ -444,17 +404,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- **BREAKING CHANGE**: Renamed various fields in the `Skin` class:
+- **BREAKING**: Renamed various fields in the `Skin` class:
     - `Skin::getSkinImage` -> `Skin::getImage`
     - `Skin::getSkinId` -> `Skin::getId`
-- **BREAKING CHANGE**: `ItemStack::getType` now returns `ItemType` instead of `std::string`. You can still compare an
+- **BREAKING**: `ItemStack::getType` now returns `ItemType` instead of `std::string`. You can still compare an
   `ItemType` with a string.
-- **BREAKING CHANGE**: `PacketSendEvent` and `PacketReceiveEvent` now fire for both pre-login and post-login packets.
+- **BREAKING**: `PacketSendEvent` and `PacketReceiveEvent` now fire for both pre-login and post-login packets.
   Ensure null safety when accessing the player object, as it may be `null` during pre-login.
 
-## [0.8.2](https://github.com/EndstoneMC/endstone/releases/tag/v0.8.2) - 2025-06-07
-
-<small>[Compare with 0.8.1](https://github.com/EndstoneMC/endstone/compare/v0.8.1...v0.8.2)</small>
+## [0.8.2] - 2025-06-07
 
 ### Added
 
@@ -465,9 +423,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed an issue when parsing arguments in custom commands (#190)
 - Ensure only certain server files are overwritten during update (#185)
 
-## [0.8.1](https://github.com/EndstoneMC/endstone/releases/tag/v0.8.1) - 2025-05-20
-
-<small>[Compare with 0.8.0](https://github.com/EndstoneMC/endstone/compare/v0.8.0...v0.8.1)</small>
+## [0.8.1] - 2025-05-20
 
 ### Added
 
@@ -483,9 +439,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `ActorDamageEvent` will no longer fire if the `damage_sensor` determines that no damage should be dealt.
 - `BlockBreakEvent` will no longer fire when a player uses an item that's not supposed to break blocks in Creative mode.
 
-## [0.8.0](https://github.com/EndstoneMC/endstone/releases/tag/v0.8.0) - 2025-05-11
-
-<small>[Compare with 0.7.3](https://github.com/EndstoneMC/endstone/compare/v0.7.3...v0.8.0)</small>
+## [0.8.0] - 2025-05-11
 
 ### Added
 
@@ -499,13 +453,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - C++ plugins can now register event handlers for `PlayerDeathEvent`
 
-### Changed
-
-- Simplified `endstone::Result` for improved error handling
-
-## [0.7.3](https://github.com/EndstoneMC/endstone/releases/tag/v0.7.3) – 2025-05-06
-
-<small>[Compare with 0.7.2](https://github.com/EndstoneMC/endstone/compare/v0.7.2...v0.7.3)</small>
+## [0.7.3] - 2025-05-06
 
 ### Added
 
@@ -514,14 +462,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
-- Ensure SetLocalPlayerAsInitializedPacket is handled only once when a player
-  joins ([#171](https://github.com/EndstoneMC/endstone/issues/171)).
+- Fixed a bug where player initialization could be processed multiple times
+  ([#171](https://github.com/EndstoneMC/endstone/issues/171)).
 - Death message is now correctly localised on the client side.
 - Python interpreter now launches correctly in multiprocessing scenarios.
 
-## [0.7.2](https://github.com/EndstoneMC/endstone/releases/tag/v0.7.2) – 2025-03-29
-
-<small>[Compare with 0.7.1](https://github.com/EndstoneMC/endstone/compare/v0.7.1...v0.7.2)</small>
+## [0.7.2] - 2025-03-29
 
 ### Added
 
@@ -534,9 +480,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Fixed an issue where outgoing packet statistics were not written to `packet-statistics.txt`.
 
-## [0.7.1](https://github.com/EndstoneMC/endstone/releases/tag/v0.7.1) - 2025-03-27
-
-<small>[Compare with 0.7.0](https://github.com/EndstoneMC/endstone/compare/v0.7.0...v0.7.1)</small>
+## [0.7.1] - 2025-03-27
 
 ### Added
 
@@ -544,19 +488,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added new `setPayload` method in `PacketSendEvent` and `PacketReceiveEvent` for editing packet contents.
 - Introduced a configuration file, `endstone.toml`, for Endstone configurations.
 
-### Fixed
-
-- Resolved a crash caused by sending packets within the `PacketSendEvent` handler.
-
 ### Changed
 
 - Updated the behavior of server pack enforcement to match vanilla BDS: clients are not allowed to use custom packs when
   `texturepack-required` is set to `true` in `server.properties`. This behavior can be overridden by setting
   `allow-client-packs` in `endstone.toml`.
 
-## [0.7.0](https://github.com/EndstoneMC/endstone/releases/tag/v0.7.0) - 2025-03-25
+### Fixed
 
-<small>[Compare with 0.6.2](https://github.com/EndstoneMC/endstone/compare/v0.6.2...v0.7.0)</small>
+- Resolved a crash caused by sending packets within the `PacketSendEvent` handler.
+
+## [0.7.0] - 2025-03-25
 
 ### Added
 
@@ -569,21 +511,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - **Inventory API**: Introduced various methods to get and set items in armor slots as well as main/off-hand slots.
 - **Inventory API**: Added methods to get and set the selected hotbar slot.
 
+### Changed
+
+- **BREAKING**: `DataPacketReceiveEvent` and `DataPacketSendEvent` have been renamed to `PacketReceiveEvent`
+  and  
+  `PacketSendEvent`, respectively. Both events now provide a packet ID and payload instead of a `data` field.
+- **BREAKING**: `Player::sendPacket` now requires a packet ID and payload as arguments instead of a `Packet`
+  object.
+
 ### Fixed
 
 - Fixed a crash caused by a conflict with the event system of the scripting API.
 
-### Changed
-
-- **BREAKING CHANGE**: `DataPacketReceiveEvent` and `DataPacketSendEvent` have been renamed to `PacketReceiveEvent`
-  and  
-  `PacketSendEvent`, respectively. Both events now provide a packet ID and payload instead of a `data` field.
-- **BREAKING CHANGE**: `Player::sendPacket` now requires a packet ID and payload as arguments instead of a `Packet`
-  object.
-
-## [0.6.2](https://github.com/EndstoneMC/endstone/releases/tag/v0.6.2) - 2025-03-09
-
-<small>[Compare with 0.6.1](https://github.com/EndstoneMC/endstone/compare/v0.6.1...v0.6.2)</small>
+## [0.6.2] - 2025-03-09
 
 ### Added
 
@@ -601,17 +541,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `PlayerJoinEvent` is now triggered after the client is fully initialized.
 - Crash reporting now works properly on Linux.
 
-## [0.6.1](https://github.com/EndstoneMC/endstone/releases/tag/v0.6.1) - 2025-02-20
-
-<small>[Compare with 0.6.0](https://github.com/EndstoneMC/endstone/compare/v0.6.0...v0.6.1)</small>
+## [0.6.1] - 2025-02-20
 
 ### Fixed
 
 - Resolved a crash caused by `ProxiedCommandSender`
 
-## [0.6.0](https://github.com/EndstoneMC/endstone/releases/tag/v0.6.0) – 2025-02-19
-
-<small>[Compare with 0.5.7.1](https://github.com/EndstoneMC/endstone/compare/v0.5.7.1...v0.6.0)</small>
+## [0.6.0] - 2025-02-19
 
 ### Added
 
@@ -633,12 +569,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added a basic chunk API.
 - Added block collision data to the DevTools by [@smartcmd](https://github.com/smartcmd) in #132.
 
-### Fixed
-
-- Fixed the logic of finding the Python executable associated with the current interpreter
-  by [@killcerr](https://github.com/killcerr) in #114.
-- Fixed the logic for parsing the `message` command parameter type.
-
 ### Changed
 
 - **Python API**: Events that are cancellable now inherit from `Cancellable`. You can check if an event is cancellable
@@ -646,9 +576,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `Dimension::getBlockAt` now returns a pointer to a `Block` directly instead of a `Result` wrapper, making the
   interface more concise. If the requested block is in an unloaded or unpopulated chunk, it returns an empty block.
 
-## [0.5.7.1](https://github.com/EndstoneMC/endstone/releases/tag/v0.5.7.1) - 2024-12-24
+### Fixed
 
-<small>[Compare with 0.5.7](https://github.com/EndstoneMC/endstone/compare/v0.5.7...v0.5.7.1)</small>
+- Fixed the logic of finding the Python executable associated with the current interpreter
+  by [@killcerr](https://github.com/killcerr) in #114.
+- Fixed the logic for parsing the `message` command parameter type.
+
+## [0.5.7.1] - 2024-12-24
 
 ### Fixed
 
@@ -656,9 +590,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Prevented player command execution from being printed to the console if the `PlayerCommandEvent` was already cancelled
   by plugins.
 
-## [0.5.7](https://github.com/EndstoneMC/endstone/releases/tag/v0.5.7) - 2024-12-23
-
-<small>[Compare with 0.5.6](https://github.com/EndstoneMC/endstone/compare/v0.5.6...v0.5.7)</small>
+## [0.5.7] - 2024-12-23
 
 ### Added
 
@@ -671,6 +603,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added setters for fields in `ServerListPingEvent` by [@theaddonn](https://github.com/theaddonn).
 - Added a new color code (`§v`).
 
+### Changed
+
+- Renamed `Server::getPlayerBanList` to `Server::getBanList`.
+- Removed deprecated material from DevTools by [@smartcmd](https://github.com/smartcmd).
+
 ### Fixed
 
 - Prevented a crash caused by killing a player in a form callback, which invalidated the player object.
@@ -680,14 +617,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   by [@engsr6982](https://github.com/engsr6982).
 - Ensured players with matching IP addresses are immediately kicked upon banning.
 
-### Changed
-
-- Renamed `Server::getPlayerBanList` to `Server::getBanList`.
-- Removed deprecated material from DevTools by [@smartcmd](https://github.com/smartcmd).
-
-## [0.5.6](https://github.com/EndstoneMC/endstone/releases/tag/v0.5.6) - 2024-12-06
-
-<small>[Compare with 0.5.5](https://github.com/EndstoneMC/endstone/compare/v0.5.5...v0.5.6)</small>
+## [0.5.6] - 2024-12-06
 
 ### Added
 
@@ -699,23 +629,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added `PluginManager::loadPlugin` to allow third-party plugin loaders to load plugins from single files instead of
   directories. [#98](https://github.com/EndstoneMC/endstone/issues/98)
 
-### Fixed
-
-- Fixed an issue where `block_palette.nbt` was dumped twice in the DevTools.
-
 ### Changed
 
 - Added support for loading a mixture of folder packs listed in `world_resource_packs.json` (the conventional method)
   and zipped packs in `.zip` or `.mcpack` format placed under `resource_packs`.
 
-## [0.5.5](https://github.com/EndstoneMC/endstone/releases/tag/v0.5.5) - 2024-10-26
+### Fixed
 
-<small>[Compare with 0.5.4.1](https://github.com/EndstoneMC/endstone/compare/v0.5.4.1...v0.5.5)</small>
+- Fixed an issue where `block_palette.nbt` was dumped twice in the DevTools.
+
+## [0.5.5] - 2024-10-26
 
 ### Added
 
 - Added support for Minecraft v1.21.40 (Bundles of Bravery).
-- CommandSender will now be downcast to the correct derived type on the Python side.
+- Python plugins now receive the correct command sender type (e.g., `Player`) instead of the base type.
 - Added the `Objective::isDisplayed` method to check if an objective is being displayed in any of the scoreboard slots.
 - Added `Server::getOnlineMode` to check if the server is running with authentication enabled.
 - Added `Actor::getScoreboardTags` to get the list of tags added to the actor.
@@ -733,25 +661,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 - Error messages from DevTools, when OpenGL is not available, are now suppressed.
-- The return type of several methods has been changed to `endstone::Result` to include error messages, which will
-  automatically throw exceptions with the same messages on the Python side.
+- Several API methods now throw descriptive exceptions on invalid input instead of returning error codes.
 
 ### Fixed
 
 - Fixed a crash that occurred while handling server ping
   requests ([#60](https://github.com/EndstoneMC/endstone/issues/60)).
 
-## [0.5.4.1](https://github.com/EndstoneMC/endstone/releases/tag/v0.5.4.1) - 2023-09-19
-
-<small>[Compare with 0.5.4](https://github.com/EndstoneMC/endstone/compare/v0.5.4...v0.5.4.1)</small>
+## [0.5.4.1] - 2024-09-19
 
 ### Fixed
 
 - Fixed a crash that could occur when the player uses emotes.
 
-## [0.5.4](https://github.com/EndstoneMC/endstone/releases/tag/v0.5.4) - 2024-09-19
-
-<small>[Compare with 0.5.3](https://github.com/EndstoneMC/endstone/compare/v0.5.3...v0.5.4)</small>
+## [0.5.4] - 2024-09-19
 
 ### Added
 
@@ -761,7 +684,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- **BREAKING CHANGE**: `Player::performCommand` now executes the command as a Player to
+- **BREAKING**: `Player::performCommand` now executes the command as a Player to
   resolve [#53](https://github.com/EndstoneMC/endstone/issues/53). This means the command execution will now depend on
   the player's permissions as operator permissions are no longer granted. If you still want to have the player perform a
   command with elevated permissions, consider using `Server::dispatchCommand` to execute
@@ -772,11 +695,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `Actor::isOnGround`, `Actor::isInWater`, and `Actor::isInLava` now return the correct values.
 - Fixed a typo in the documentation by [@thatgurkangurk](https://github.com/thatgurkangurk).
 - Fixed the command parser logic for chained commands.
-- Fixed a server crash when spawning a simulated player due to the absence of an invalid network identifier.
+- Fixed a crash when spawning a simulated player.
 
-## [0.5.3](https://github.com/EndstoneMC/endstone/releases/tag/v0.5.3) - 2024-09-12
-
-<small>[Compare with 0.5.2](https://github.com/EndstoneMC/endstone/compare/v0.5.2...v0.5.3)</small>
+## [0.5.3] - 2024-09-12
 
 ### Added
 
@@ -794,7 +715,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- **BREAKING CHANGE**: Renamed `Server::getNewScoreboard` to `Server::createScoreboard` for consistency with other
+- **BREAKING**: Renamed `Server::getNewScoreboard` to `Server::createScoreboard` for consistency with other
   methods like `createBossbar` and `createBlockData`.
 - Lifted the restriction on the `/reload` command for console use. It can now be executed in-game.
 
@@ -807,9 +728,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   with a block with bare hands.
 - `PlayerInteractEvent::hasItem` now correctly returns `false` if the player has no item in hand when interacting.
 
-## [0.5.2](https://github.com/EndstoneMC/endstone/releases/tag/v0.5.2) - 2024-08-30
-
-<small>[Compare with 0.5.1](https://github.com/EndstoneMC/endstone/compare/v0.5.1...v0.5.2)</small>
+## [0.5.2] - 2024-08-30
 
 ### Added
 
@@ -831,9 +750,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#38](https://github.com/EndstoneMC/endstone/issues/38) - Plugins can now be properly loaded inside a virtual
   environment on Linux.
 
-## [0.5.1](https://github.com/EndstoneMC/endstone/releases/tag/v0.5.1) - 2024-08-24
-
-<small>[Compare with 0.5.0](https://github.com/EndstoneMC/endstone/compare/v0.5.0...v0.5.1)</small>
+## [0.5.1] - 2024-08-24
 
 ### Added
 
@@ -853,8 +770,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - `Player::isOp` and `Player::setOp` methods are now consistent with the similar methods in the scripting API.
 - The fix for the warning message about empty packets is now redundant and has been removed.
-- **BREAKING CHANGE:** `Server::getLevels` has been replaced by `Server::getLevel`.
-- **BREAKING CHANGE:** `Player::getDeviceId` now returns a string object instead of a UUID object, as it is not
+- **BREAKING**: `Server::getLevels` has been replaced by `Server::getLevel`.
+- **BREAKING**: `Player::getDeviceId` now returns a string object instead of a UUID object, as it is not
   guaranteed to be a UUID on all platforms.
 
 ### Fixed
@@ -867,9 +784,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Action forms without any buttons can now be displayed correctly on the client side.
 - The Python executable can now be located in multiple possible locations on Linux.
 
-## [0.5.0](https://github.com/EndstoneMC/endstone/releases/tag/v0.5.0) - 2024-07-29
-
-<small>[Compare with 0.4.10](https://github.com/EndstoneMC/endstone/compare/v0.4.10...v0.5.0)</small>
+## [0.5.0] - 2024-07-29
 
 ### Added
 
@@ -889,18 +804,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 - `Player` class now inherits from the `Mob` class instead of `Actor` class.
-- **BREAKING CHANGE:** Plugin names should only contain lowercase letters, numbers, and underscores. Use the prefix
+- **BREAKING**: Plugin names should only contain lowercase letters, numbers, and underscores. Use the prefix
   property to display a different name for the plugin logger.
-- **BREAKING CHANGE:** The `player.ping` property now returns an `int` instead of `datetime.timedelta`.
+- **BREAKING**: The `player.ping` property now returns an `int` instead of `datetime.timedelta`.
 
 ### Fixed
 
-- Fixed issue where `Server::setMaxPlayers` would crash due to a change in the internal struct in BDS.
+- Fixed a crash when setting the maximum number of players.
 - Fixed issue that python executable cannot be located when running in a virtual environment.
 
-## [0.4.10](https://github.com/EndstoneMC/endstone/releases/tag/v0.4.10) - 2024-07-10
-
-<small>[Compare with 0.4.9](https://github.com/EndstoneMC/endstone/compare/v0.4.9...v0.4.10)</small>
+## [0.4.10] - 2024-07-10
 
 ### Added
 
@@ -913,9 +826,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Issue with shaped recipes. Recipes that have item tags as input (instead of item names) can now be dumped correctly.
 
-## [0.4.9](https://github.com/EndstoneMC/endstone/releases/tag/v0.4.9) - 2024-07-05
-
-<small>[Compare with 0.4.8.1](https://github.com/EndstoneMC/endstone/compare/v0.4.8.1...v0.4.9)</small>
+## [0.4.9] - 2024-07-05
 
 ### Added
 
@@ -944,9 +855,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Suppressed warning message about empty UDP packets from the output.
 
-## [0.4.8.1](https://github.com/EndstoneMC/endstone/releases/tag/v0.4.8.1) - 2024-06-15
-
-<small>[Compare with 0.4.7](https://github.com/EndstoneMC/endstone/compare/v0.4.7...v0.4.8.1)</small>
+## [0.4.8.1] - 2024-06-15
 
 ### Added
 
@@ -960,9 +869,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed a regression in vanilla command permissions.
 - Permission attachment now works as expected.
 
-## [0.4.7](https://github.com/EndstoneMC/endstone/releases/tag/v0.4.7) - 2024-06-13
-
-<small>[Compare with 0.4.6](https://github.com/EndstoneMC/endstone/compare/v0.4.6...v0.4.7)</small>
+## [0.4.7] - 2024-06-13
 
 ### Added
 
@@ -972,8 +879,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `Actor::getDimension` for getting the dimension that an actor resides in.
 - `Player::getGameMode` and `Player::setGameMode` for getting and setting a player's game mode.
 - Plugin configuration for Python plugins.
-- Added more struct info by [@Duckos-Mods](https://github.com/Duckos-Mods)
-  in [#11](https://github.com/EndstoneMC/endstone/pull/11).
 - World seed will no longer be sent to the client when `client-side-chunk-generation-enabled` is disabled
   in `server.properties`.
 - Command permissions are now checked before its parsing.
@@ -984,26 +889,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- Changed logging level look-up from using a hashmap to using a switch by [@Duckos-Mods](https://github.com/Duckos-Mods)
-  in [#12](https://github.com/EndstoneMC/endstone/pull/12)
-- Endstone no longer requires the presence of debug symbols at runtime.
+- Endstone no longer requires debug symbols at runtime.
 
 ### Fixed
 
 - `Actor::getVelocity` now returns the correct velocity when the actor rides a vehicle.
 - Python plugin loader now works correctly with Python 3.9.
 
-## [0.4.6](https://github.com/EndstoneMC/endstone/releases/tag/v0.4.6) - 2024-05-15
-
-<small>[Compare with 0.4.5](https://github.com/EndstoneMC/endstone/compare/v0.4.5...v0.4.6)</small>
+## [0.4.6] - 2024-05-15
 
 ### Fixed
 
 - Improved the detection of Python executable.
 
-## [0.4.5](https://github.com/EndstoneMC/endstone/releases/tag/v0.4.5) - 2024-05-14
-
-<small>[Compare with 0.4.3](https://github.com/EndstoneMC/endstone/compare/v0.4.3...v0.4.5)</small>
+## [0.4.5] - 2024-05-14
 
 ### Added
 
@@ -1015,9 +914,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Scheduler now works on Linux.
 
-## [0.4.3](https://github.com/EndstoneMC/endstone/releases/tag/v0.4.3) - 2024-05-13
-
-<small>[Compare with 0.4.2](https://github.com/EndstoneMC/endstone/compare/v0.4.2...v0.4.3)</small>
+## [0.4.3] - 2024-05-13
 
 ### Added
 
@@ -1037,9 +934,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   of `--install`.
 - Endstone server will now ask the user whether to update the Bedrock Dedicated Server if an older version is found.
 
-## [0.4.2](https://github.com/EndstoneMC/endstone/releases/tag/v0.4.2) - 2024-04-30
-
-<small>[Compare with 0.4.1](https://github.com/EndstoneMC/endstone/compare/v0.4.1...v0.4.2)</small>
+## [0.4.2] - 2024-04-30
 
 ### Added
 
@@ -1057,12 +952,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Server no longer crashes when the weather is changed on Linux.
 
-## [0.4.1](https://github.com/EndstoneMC/endstone/releases/tag/v0.4.1) - 2024-04-24
-
-<small>[Compare with 0.4.0](https://github.com/EndstoneMC/endstone/compare/v0.4.0...v0.4.1)</small>
-
-This release focuses on supporting game version v1.20.80, which adds several new features.
-Additionally, we add a few useful functions to `Player` and `Server`.
+## [0.4.1] - 2024-04-24
 
 ### Added
 
@@ -1081,12 +971,7 @@ Additionally, we add a few useful functions to `Player` and `Server`.
 - Player permissions are recalculated when the op status is changed.
 - Incorrect UUID for Players corrected.
 
-## [0.4.0](https://github.com/EndstoneMC/endstone/releases/tag/v0.4.0) - 2024-04-20
-
-<small>[Compare with 0.3.0](https://github.com/EndstoneMC/endstone/compare/v0.3.0...v0.4.0)</small>
-
-In this release, we added an event system and several basic interfaces for game objects like `Level`, `Actor`
-and `Player`.
+## [0.4.0] - 2024-04-20
 
 ### Added
 
@@ -1111,22 +996,16 @@ and `Player`.
 
 ### Changed
 
-- Singletons are now managed using `entt::locator`.
 - Macro `ENDSTONE_PLUGIN` is improved to simplify the definition of plugin metadata.
 - `ColorFormat` and `GameMode` have been moved from `endstone.util` to `endstone` in the Python package.
-- Wheels are now built and released with `RelWithDebInfo` configuration to enable stack trace printing.
+- Release builds now include debug information for stack trace printing.
 - Support for Minecraft v1.20.73 (Bedrock)
 
 ### Fixed
 
 - Server no longer crashes when `/listd` command is executed.
 
-## [0.3.0](https://github.com/EndstoneMC/endstone/releases/tag/v0.3.0) - 2024-03-21
-
-<small>[Compare with 0.2.0](https://github.com/EndstoneMC/endstone/compare/v0.2.0...v0.3.0)</small>
-
-This is the second release of Endstone with a focus on the permission system and improving the plugin loading
-mechanisms.
+## [0.3.0] - 2024-03-21
 
 ### Added
 
@@ -1147,11 +1026,70 @@ mechanisms.
 
 - C++ plugin loader now respects the `prefix` property of a plugin.
 
-## [0.2.0](https://github.com/EndstoneMC/endstone/releases/tag/v0.2.0) - 2024-03-19
-
-Hello World! This is the first release of Endstone.
+## [0.2.0] - 2024-03-19
 
 ### Added
 
 - Basic plugin loader for C++ and Python plugins.
 - Basic command system that allows plugins to register custom commands.
+
+[unreleased]: https://github.com/EndstoneMC/endstone/compare/v0.11.2...HEAD
+[0.11.2]: https://github.com/EndstoneMC/endstone/compare/v0.11.1...v0.11.2
+[0.11.1]: https://github.com/EndstoneMC/endstone/compare/v0.11.0...v0.11.1
+[0.11.0]: https://github.com/EndstoneMC/endstone/compare/v0.10.18...v0.11.0
+[0.10.18]: https://github.com/EndstoneMC/endstone/compare/v0.10.17...v0.10.18
+[0.10.17]: https://github.com/EndstoneMC/endstone/compare/v0.10.16...v0.10.17
+[0.10.16]: https://github.com/EndstoneMC/endstone/compare/v0.10.15...v0.10.16
+[0.10.15]: https://github.com/EndstoneMC/endstone/compare/v0.10.14...v0.10.15
+[0.10.14]: https://github.com/EndstoneMC/endstone/compare/v0.10.13...v0.10.14
+[0.10.13]: https://github.com/EndstoneMC/endstone/compare/v0.10.12...v0.10.13
+[0.10.12]: https://github.com/EndstoneMC/endstone/compare/v0.10.11...v0.10.12
+[0.10.11]: https://github.com/EndstoneMC/endstone/compare/v0.10.10...v0.10.11
+[0.10.10]: https://github.com/EndstoneMC/endstone/compare/v0.10.9...v0.10.10
+[0.10.9]: https://github.com/EndstoneMC/endstone/compare/v0.10.8...v0.10.9
+[0.10.8]: https://github.com/EndstoneMC/endstone/compare/v0.10.7...v0.10.8
+[0.10.7]: https://github.com/EndstoneMC/endstone/compare/v0.10.6...v0.10.7
+[0.10.6]: https://github.com/EndstoneMC/endstone/compare/v0.10.5...v0.10.6
+[0.10.5]: https://github.com/EndstoneMC/endstone/compare/v0.10.4...v0.10.5
+[0.10.4]: https://github.com/EndstoneMC/endstone/compare/v0.10.3...v0.10.4
+[0.10.3]: https://github.com/EndstoneMC/endstone/compare/v0.10.2...v0.10.3
+[0.10.2]: https://github.com/EndstoneMC/endstone/compare/v0.10.1...v0.10.2
+[0.10.1]: https://github.com/EndstoneMC/endstone/compare/v0.10.0...v0.10.1
+[0.10.0]: https://github.com/EndstoneMC/endstone/compare/v0.9.4...v0.10.0
+[0.9.4]: https://github.com/EndstoneMC/endstone/compare/v0.9.3...v0.9.4
+[0.9.3]: https://github.com/EndstoneMC/endstone/compare/v0.9.2...v0.9.3
+[0.9.2]: https://github.com/EndstoneMC/endstone/compare/v0.9.1...v0.9.2
+[0.9.1]: https://github.com/EndstoneMC/endstone/compare/v0.9.0...v0.9.1
+[0.9.0]: https://github.com/EndstoneMC/endstone/compare/v0.8.2...v0.9.0
+[0.8.2]: https://github.com/EndstoneMC/endstone/compare/v0.8.1...v0.8.2
+[0.8.1]: https://github.com/EndstoneMC/endstone/compare/v0.8.0...v0.8.1
+[0.8.0]: https://github.com/EndstoneMC/endstone/compare/v0.7.3...v0.8.0
+[0.7.3]: https://github.com/EndstoneMC/endstone/compare/v0.7.2...v0.7.3
+[0.7.2]: https://github.com/EndstoneMC/endstone/compare/v0.7.1...v0.7.2
+[0.7.1]: https://github.com/EndstoneMC/endstone/compare/v0.7.0...v0.7.1
+[0.7.0]: https://github.com/EndstoneMC/endstone/compare/v0.6.2...v0.7.0
+[0.6.2]: https://github.com/EndstoneMC/endstone/compare/v0.6.1...v0.6.2
+[0.6.1]: https://github.com/EndstoneMC/endstone/compare/v0.6.0...v0.6.1
+[0.6.0]: https://github.com/EndstoneMC/endstone/compare/v0.5.7.1...v0.6.0
+[0.5.7.1]: https://github.com/EndstoneMC/endstone/compare/v0.5.7...v0.5.7.1
+[0.5.7]: https://github.com/EndstoneMC/endstone/compare/v0.5.6...v0.5.7
+[0.5.6]: https://github.com/EndstoneMC/endstone/compare/v0.5.5...v0.5.6
+[0.5.5]: https://github.com/EndstoneMC/endstone/compare/v0.5.4.1...v0.5.5
+[0.5.4.1]: https://github.com/EndstoneMC/endstone/compare/v0.5.4...v0.5.4.1
+[0.5.4]: https://github.com/EndstoneMC/endstone/compare/v0.5.3...v0.5.4
+[0.5.3]: https://github.com/EndstoneMC/endstone/compare/v0.5.2...v0.5.3
+[0.5.2]: https://github.com/EndstoneMC/endstone/compare/v0.5.1...v0.5.2
+[0.5.1]: https://github.com/EndstoneMC/endstone/compare/v0.5.0...v0.5.1
+[0.5.0]: https://github.com/EndstoneMC/endstone/compare/v0.4.10...v0.5.0
+[0.4.10]: https://github.com/EndstoneMC/endstone/compare/v0.4.9...v0.4.10
+[0.4.9]: https://github.com/EndstoneMC/endstone/compare/v0.4.8.1...v0.4.9
+[0.4.8.1]: https://github.com/EndstoneMC/endstone/compare/v0.4.7...v0.4.8.1
+[0.4.7]: https://github.com/EndstoneMC/endstone/compare/v0.4.6...v0.4.7
+[0.4.6]: https://github.com/EndstoneMC/endstone/compare/v0.4.5...v0.4.6
+[0.4.5]: https://github.com/EndstoneMC/endstone/compare/v0.4.3...v0.4.5
+[0.4.3]: https://github.com/EndstoneMC/endstone/compare/v0.4.2...v0.4.3
+[0.4.2]: https://github.com/EndstoneMC/endstone/compare/v0.4.1...v0.4.2
+[0.4.1]: https://github.com/EndstoneMC/endstone/compare/v0.4.0...v0.4.1
+[0.4.0]: https://github.com/EndstoneMC/endstone/compare/v0.3.0...v0.4.0
+[0.3.0]: https://github.com/EndstoneMC/endstone/compare/v0.2.0...v0.3.0
+[0.2.0]: https://github.com/EndstoneMC/endstone/releases/tag/v0.2.0

@@ -195,6 +195,8 @@ public:
     virtual Factory<BaseLightTextureImageBuilder, Level &, Scheduler &> &getLightTextureImageBuilderFactory() = 0;
     [[nodiscard]] virtual void *getWorldRegistriesProvider() const = 0;
     virtual void *getWorldRegistriesProvider() = 0;
+    virtual const Bedrock::NotNullNonOwnerPtr<const WorldClockRegistry> getWorldClockRegistry() const = 0;
+    virtual Bedrock::NotNullNonOwnerPtr<WorldClockRegistry> getWorldClockRegistry() = 0;
     virtual void addListener(LevelListener &) = 0;
     virtual void removeListener(LevelListener &) = 0;
     virtual void tickEntities() = 0;
@@ -500,6 +502,8 @@ public:
 protected:
     virtual PlayerDeathManager *_getPlayerDeathManager() = 0;
     virtual MapDataManager &_getMapDataManager() = 0;
+    virtual const TickTimeManager &_getTickTimeManager() const = 0;
+    virtual TickTimeManager &_getTickTimeManager() = 0;
     virtual cereal::ReflectionCtx &_cerealContext() = 0;
     virtual void _onLowMemory() = 0;
 };

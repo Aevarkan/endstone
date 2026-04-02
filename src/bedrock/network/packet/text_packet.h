@@ -34,7 +34,6 @@ enum class TextPacketType : std::uint8_t {
     TextObjectAnnouncement = 11
 };
 
-class TextPacket;
 struct TextPacketPayload {
     static constexpr int MAX_CHAT_LENGTH = 512;
     static constexpr int MAX_MESSAGE_PARAMS = 4;
@@ -64,49 +63,10 @@ struct TextPacketPayload {
     const std::string &getMessage() const;
     const std::string &getAuthorOrEmpty() const;
     const std::vector<std::string> &getParams() const;
-    static TextPacket createRaw(const std::string &raw);
-    static TextPacket createChat(const std::string &author, const std::string &message,
-                                 const std::optional<std::string> filtered_message, const std::string &xuid,
-                                 const std::string &platform_id);
-    static TextPacket createTranslatedChat(const std::string &author, const std::string &message,
-                                           const std::string &xuid, const std::string &platform_id);
-    static TextPacket createTranslated(const std::string &message, const std::vector<std::string> &params);
-    static TextPacket createTextObjectMessage(const ResolvedTextObject &resolved_text_object, std::string fromXuid,
-                                              std::string from_platform_id);
-    static TextPacket createTextObjectWhisperMessage(const ResolvedTextObject &resolved_text_object,
-                                                     const std::string &xuid, const std::string &platform_id);
-    static TextPacket createTextObjectWhisperMessage(const std::string &message, const std::string &xuid,
-                                                     const std::string &platform_id);
-    static TextPacket createRawJsonObjectMessage(const std::string &raw_json);
-    static TextPacket createRawJsonObjectAnnouncement(const std::string &raw_json);
-    static TextPacket createSystemMessage(const std::string &message);
-    static TextPacket createWhisper(const std::string &author, const std::string &message,
-                                    const std::optional<std::string> filtered_message, const std::string &xuid,
-                                    const std::string &platform_id);
-    static TextPacket createAnnouncement(const std::string &author, const std::string &message,
-                                         const std::optional<std::string> filtered_message, const std::string &xuid,
-                                         const std::string &platform_id);
-    static TextPacket createTranslatedAnnouncement(const std::string &author, const std::string &message,
-                                                   const std::string &xuid, const std::string &platform_id);
-    static TextPacket createJukeboxPopup(const std::string &message, const std::vector<std::string> &params);
-
-    static TextPacket createPopup(const std::string &message, const std::vector<std::string> &params);  // Endstone
-    static TextPacket createTip(const std::string &message);                                            // Endstone
 };
 
 class TextPacket : public Packet {
 public:
-    TextPacket() = default;
-    TextPacket(TextPacketPayload payload);
-    ~TextPacket() override = default;
-    [[nodiscard]] MinecraftPacketIds getId() const override;
-    [[nodiscard]] std::string_view getName() const override;
-    void write(BinaryStream &) const override;
-
     TextPacketPayload payload;
     SerializationMode serialization_mode;
-
-private:
-    Bedrock::Result<void> _read(ReadOnlyBinaryStream &) override;
 };
-// static_assert(sizeof(TextPacket) == 216);

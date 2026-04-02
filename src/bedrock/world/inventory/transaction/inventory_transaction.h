@@ -37,12 +37,17 @@ enum class InventoryTransactionError : int {
 
 class InventoryTransaction {
 public:
-    ENDSTONE_HOOK InventoryTransactionError executeFull(Player &player, bool is_sender_authority) const;
+    InventoryTransactionError executeFull(Player &player, bool is_sender_authority) const;
     [[nodiscard]] std::function<InventoryTransactionError(Player &, const InventoryAction &, bool)> getVerifyFunction(
         const InventorySource &source) const;
     [[nodiscard]] std::function<InventoryTransactionError(Player &, const InventoryAction &)> getExecuteFunction(
         const InventorySource &source) const;
-    static bool checkTransactionItemsMatch(const ItemStack & server_item, const ItemStack & client_item);
+    static bool checkTransactionItemsMatch(const ItemStack &server_item, const ItemStack &client_item);
+
+    // Endstone: the target function to hook is actually a lambda function returned by getExecuteFunction
+    // For convenience, we gave it an arbitrary function name executeWorldInteraction
+    ENDSTONE_HOOK static InventoryTransactionError executeWorldInteraction(void *ctx, Player &player,
+                                                                           const InventoryAction &action);
 
 private:
     std::unordered_map<InventorySource, std::vector<InventoryAction>> actions_;

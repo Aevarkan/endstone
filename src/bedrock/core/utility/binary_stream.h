@@ -58,7 +58,9 @@ public:
     using ReadOnlyBinaryStream::ReadOnlyBinaryStream;
     BinaryStream();
     [[nodiscard]] const std::string &getBuffer() const;
+    void reserve(std::size_t size);
     void reset();
+    std::string getAndReleaseData();
 
     ~BinaryStream() override = default;
     virtual void writeBool(bool value, char const *doc_field_name, char const *doc_field_notes);
@@ -102,16 +104,20 @@ public:
                     list_doc_field_name, list_doc_field_notes);
     }
 
+public:
+    void writeRawBytes(std::string_view span);
+    void writeStream(BinaryStream &);
+    void writeUnsignedChar(unsigned char value, char const *doc_field_name, char const *doc_field_notes);
+
+protected:
+    virtual bool writeTypeBegin_DocHelper(const char *, const char *, const char *);
+    virtual void writeTypeEnd_DocHelper();
+    virtual void writeEnum_DocHelper(const char *, const char *);
+
 private:
     virtual void _writeArray(std::function<void(BinaryStream &)> &&size_writer,
                              std::function<void(BinaryStream &)> &&writer, char const *doc_field_name,
                              char const *doc_field_notes);
-
-public:
-    void writeRawBytes(std::string_view span);
-    void writeStream(BinaryStream &);
-
-private:
     void write(const void *data, std::size_t size);
     std::string *buffer_;  // +72
 };

@@ -42,6 +42,13 @@ enum class SubClientId : std::uint8_t {
 using BlockRuntimeId = std::uint32_t;
 struct BiomeIdType : NewType<std::uint16_t> {};
 
+struct DimensionIdType : NewType<std::uint16_t> {
+    static constexpr std::uint16_t INVALID_ID = 65535;
+    DimensionIdType() = default;
+    DimensionIdType &reset();
+    [[nodiscard]] bool isValid() const;
+};
+
 struct NewBlockID : NewType<std::uint16_t> {};
 static_assert(sizeof(NewBlockID) == 2);
 

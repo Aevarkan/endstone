@@ -31,6 +31,19 @@ void init_block(py::module_ &m, py::class_<Block> &block)
         .value("EAST", BlockFace::East)
         .finalize();
 
+    py::class_<BlockType>(m, "BlockType", "Represents a block type.")
+        .def_property_readonly("id", &BlockType::getId, "Return the identifier of this block type.")
+        .def_property_readonly("translation_key", &BlockType::getTranslationKey,
+                               "Get the translation key, suitable for use in a translation component.")
+        .def_property_readonly("has_item_type", &BlockType::hasItemType,
+                               "Returns true if this BlockType has a corresponding ItemType.")
+        .def("create_block_data", &BlockType::createBlockData,
+             "Creates a new BlockData instance for this block type, with all properties initialized to defaults.")
+        .def_static("get", &BlockType::get, py::arg("name"), "Attempts to get the BlockType with the given name.",
+                    py::return_value_policy::reference)
+        .def("__str__", &BlockType::getId)
+        .def("__repr__", [](const BlockType &self) { return fmt::format("BlockType({})", self.getId()); });
+
     py::class_<BlockData>(m, "BlockData", "Represents the data related to a live block")
         .def_property_readonly("type", &BlockData::getType, "Get the block type represented by this block data.")
         .def_property_readonly("translation_key", &BlockData::getTranslationKey, "Gets the translation key for this block.")

@@ -30,13 +30,13 @@ public:
     };
     NetworkConnection() = delete;
 
-    [[nodiscard]] bool isChannelPaused(uint32_t channel) const;
-    void setChannelPaused(uint32_t channel, bool paused);
-    [[nodiscard]] ENDSTONE_HOOK NetworkPeer::DataStatus receivePacket(
-        std::string &receive_buffer, const NetworkPeer::PacketRecvTimepointPtr &timepoint_ptr);
+    [[nodiscard]] bool isChannelPaused(uint32_t channel) const { return paused_channels_.test(channel); }
+    void setChannelPaused(uint32_t channel, bool paused) { paused_channels_.set(channel, paused); }
+    [[nodiscard]] NetworkPeer::DataStatus receivePacket(std::string &receive_buffer,
+                                                        const NetworkPeer::PacketRecvTimepointPtr &timepoint_ptr);
     void update();
     void disconnect();
-    [[nodiscard]] bool shouldCloseConnection() const;
+    [[nodiscard]] bool shouldCloseConnection() const { return should_close_connection_; }
 
     NetworkIdentifier id;
     Type type;
