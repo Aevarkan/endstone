@@ -31,6 +31,7 @@ WORKDIR /usr/src/endstone
 
 # Install C++ dependencies using Conan
 COPY conanfile.py conanfile.py
+ENV M4=/usr/bin/m4
 RUN python -m pip install --upgrade pip \
     && pip install conan cmake ninja \
     && conan profile detect \
