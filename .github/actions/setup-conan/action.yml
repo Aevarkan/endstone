@@ -39,6 +39,7 @@ runs:
         pip install conan
 
     - name: Detect Conan profile
+      if: inputs.install-dependencies == 'true'
       shell: bash
       run: conan profile detect --force
 
