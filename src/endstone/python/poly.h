@@ -17,106 +17,23 @@
 #include <pybind11/pybind11.h>
 
 namespace PYBIND11_NAMESPACE {
-template <>
-struct polymorphic_type_hook<endstone::Mob> {
-    static const void *get(const endstone::Mob *src, const std::type_info *&type)
+
+/**
+ * @brief Generic polymorphic type hook for all endstone::Object-derived types.
+ *
+ * Uses Object::getClassTypeId() to report the public API type to pybind11,
+ * enabling correct isinstance() dispatch without per-type hooks.
+ */
+template <typename T>
+struct polymorphic_type_hook<T, std::enable_if_t<std::is_base_of_v<endstone::Object, T>>> {
+    static const void *get(const T *src, const std::type_info *&type)
     {
         if (!src) {
             return src;
         }
-        if (const auto *player = src->asPlayer()) {
-            type = &typeid(endstone::Player);
-            return player;
-        }
-        type = &typeid(endstone::Mob);
+        type = &src->getClassTypeId();
         return src;
     }
 };
 
-template <>
-struct polymorphic_type_hook<endstone::Actor> {
-    static const void *get(const endstone::Actor *src, const std::type_info *&type)
-    {
-        if (!src) {
-            return src;
-        }
-        if (const auto *mob = src->asMob()) {
-            return polymorphic_type_hook<endstone::Mob>::get(mob, type);
-        }
-        if (const auto *item = src->asItem()) {
-            type = &typeid(endstone::Item);
-            return item;
-        }
-        type = &typeid(endstone::Actor);
-        return src;
-    }
-};
-
-template <>
-struct polymorphic_type_hook<endstone::CommandSender> {
-    static const void *get(const endstone::CommandSender *src, const std::type_info *&type)
-    {
-        if (!src) {
-            return src;
-        }
-        if (const auto *actor = src->asActor()) {
-            return polymorphic_type_hook<endstone::Actor>::get(actor, type);
-        }
-        if (const auto *console = src->asConsole()) {
-            type = &typeid(endstone::ConsoleCommandSender);
-            return console;
-        }
-        if (const auto *block = src->asBlock()) {
-            type = &typeid(endstone::BlockCommandSender);
-            return block;
-        }
-        type = &typeid(endstone::CommandSender);
-        return src;
-    }
-};
-
-template <>
-struct polymorphic_type_hook<endstone::Permissible> {
-    static const void *get(const endstone::Permissible *src, const std::type_info *&type)
-    {
-        if (!src) {
-            return src;
-        }
-        if (const auto *command_sender = src->asCommandSender()) {
-            return polymorphic_type_hook<endstone::CommandSender>::get(command_sender, type);
-        }
-        type = &typeid(endstone::Permissible);
-        return src;
-    }
-};
-
-template <>
-struct polymorphic_type_hook<endstone::ItemMeta> {
-    static const void *get(const endstone::ItemMeta *src, const std::type_info *&type)
-    {
-        if (!src) {
-            return src;
-        }
-
-        switch (src->getType()) {
-        case endstone::ItemMeta::Type::Map:
-            type = &typeid(endstone::MapMeta);
-            return static_cast<const endstone::MapMeta *>(src);
-        case endstone::ItemMeta::Type::WritableBook:
-            type = &typeid(endstone::WritableBookMeta);
-            return static_cast<const endstone::WritableBookMeta *>(src);
-        case endstone::ItemMeta::Type::Book:
-            type = &typeid(endstone::BookMeta);
-            return static_cast<const endstone::BookMeta *>(src);
-        case endstone::ItemMeta::Type::CrossBow:
-            type = &typeid(endstone::CrossbowMeta);
-            return static_cast<const endstone::CrossbowMeta *>(src);
-        case endstone::ItemMeta::Type::Item:
-        default:
-            break;
-        }
-        type = &typeid(endstone::ItemMeta);
-        return src;
-    }
-};
 }  // namespace PYBIND11_NAMESPACE
