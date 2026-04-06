@@ -12,21 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "bedrock/world/actor/actor_factory.h"
+#include "endstone/core/actor/actor_type.h"
 
-#include "bedrock/symbol.h"
+#include <fmt/format.h>
 
-OwnerPtr<EntityContext> ActorFactory::createSpawnedActor(const ActorDefinitionIdentifier &identifier, Actor *spawner,
-                                                         const Vec3 &position, const Vec2 &rotation)
+namespace endstone::core {
+
+EndstoneActorType::EndstoneActorType(std::string canonical_name) : canonical_name_(std::move(canonical_name)) {}
+
+ActorTypeId EndstoneActorType::getId() const
 {
-    return BEDROCK_CALL(&ActorFactory::createSpawnedActor, this, identifier, spawner, position, rotation);
+    return ActorTypeId{canonical_name_};
 }
 
-std::vector<std::string> ActorFactory::generateActorIdentifierList() const
+std::string EndstoneActorType::getTranslationKey() const
 {
-    std::vector<std::string> result;
-    for (const auto &key : factory_function_ | std::views::keys) {
-        result.emplace_back(key);
-    }
-    return result;
+    return fmt::format("entity.{}.name", getId().getKey());
 }
+
+}  // namespace endstone::core

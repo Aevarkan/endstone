@@ -12,21 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "bedrock/world/actor/actor_factory.h"
+#pragma once
 
-#include "bedrock/symbol.h"
+using ActorFactoryFunction = std::unique_ptr<Actor> (*)(ActorDefinitionGroup *, const ActorDefinitionIdentifier &,
+                                                        EntityContext &);
 
-OwnerPtr<EntityContext> ActorFactory::createSpawnedActor(const ActorDefinitionIdentifier &identifier, Actor *spawner,
-                                                         const Vec3 &position, const Vec2 &rotation)
-{
-    return BEDROCK_CALL(&ActorFactory::createSpawnedActor, this, identifier, spawner, position, rotation);
-}
-
-std::vector<std::string> ActorFactory::generateActorIdentifierList() const
-{
-    std::vector<std::string> result;
-    for (const auto &key : factory_function_ | std::views::keys) {
-        result.emplace_back(key);
-    }
-    return result;
-}
+struct ActorFactoryData {
+    ActorDefinitionIdentifier identifier;
+    ActorDefinitionIdentifier base_identifier;
+    bool allow_summon;
+    ActorFactoryFunction factory;
+    std::optional<int> experiment_index;
+    ActorType actor_type;
+    float walk_anim_speed;
+    bool is_alias;
+};
