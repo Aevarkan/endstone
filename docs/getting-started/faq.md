@@ -15,7 +15,7 @@ comments: true
 
     Endstone is built around the official [Bedrock Dedicated Server (BDS)](https://www.minecraft.net/download/server/bedrock), which supports Windows and Ubuntu Linux.
 
-    Accordingly, Endstone only supports Windows and Ubuntu Linux. Other platforms may or may not function.
+    Accordingly, Endstone only supports Windows and Ubuntu Linux. Endstone may or may not function on other platforms.
 
     BDS natively supports the `x86-64` CPU architecture. Systems with `arm` CPU architectures are not officially supported.[^1]
 
@@ -38,3 +38,12 @@ comments: true
     Add-Ons, including behavior and resource packs, created for the base game will also work on Endstone.
 
     For more information, refer to [Microsoft's documentation](https://learn.microsoft.com/minecraft/creator/documents/bedrockserver/getting-started).
+
+
+???+ question "Does Endstone support Data Packs?"
+
+    Data packs are the Java Edition equivalent of behavior packs.
+
+    Endstone, being a plugin API for Bedrock Dedicated Servers, does not support data packs, or any other content made for Java Edition which isn't already supported by BDS.
+
+    For more information, see [Microsoft's documentation](https://learn.microsoft.com/minecraft/creator/documents/differencesbetweenbedrockandjava#behavior-packs).
